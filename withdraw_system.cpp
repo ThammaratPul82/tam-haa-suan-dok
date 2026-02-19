@@ -76,7 +76,7 @@ void withdraw_system(){
                 return;
             }
             if (amount > acc.balance) {
-                cout << "Error: ยอดเงินในบัญชีไม่เพียงพอ! (ขาดอีก " << (amount - acc.balance) << " บาท)\n";
+                cout << "Error: ยอดเงินในบัญชีไม่เพียงพอ!\n";
                 return;
             }
 
@@ -97,7 +97,7 @@ void withdraw_system(){
         for (const auto &acc : account) {
             fileout << acc.id << "," 
                     << fixed << setprecision(2) << acc.balance << "," 
-                    << acc.time << "," ;
+                    << acc.time << endl;
                     
         }
         fileout.close();

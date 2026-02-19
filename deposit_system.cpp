@@ -90,7 +90,7 @@ void deposit_system(){
         for (const auto &acc : account) {
             fileout << acc.id << "," 
                     << fixed << setprecision(2) << acc.balance << "," 
-                    << acc.time << "," ;
+                    << acc.time << endl;
                     
         }
         fileout.close();
