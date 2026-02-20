@@ -14,7 +14,6 @@ struct User {
 vector<User> user_info;
 
 
-
 void saveToFile(const vector<User> &user_info) {   //input vector โง่ๆ
     ofstream outFile("users.csv");
 
@@ -32,7 +31,7 @@ void saveToFile(const vector<User> &user_info) {   //input vector โง่ๆ
 int main(){
     ifstream file("users.csv") ;
     string line ; 
-    
+    bool status = false ;
     if (!file.is_open()) {
         cerr << "can not open ! " << endl; 
         return 1 ; 
@@ -46,15 +45,13 @@ int main(){
     while (getline(ss, value, ',')) {
             blow.push_back(value);
         }
-        //user_info.push_back(blow);   //assing ใส่ เวกเตอร์ 2 มิติ
-        
+        //user_info.push_back(blow);   //assing ใส่ เวกเตอร์ 2 มิติ       
         if (blow.size() >= 4) {
             User u;
             u.username = blow[0];
             u.name_surname = blow[1];
             u.password = blow[2];
-            u.attempt = stoi(blow[3]); // แปลง string เป็น int
-            
+            u.attempt = stoi(blow[3]); // แปลง string เป็น int          
             user_info.push_back(u);
         }
 
@@ -65,9 +62,9 @@ int main(){
     for (int i = 0; i < user_info.size(); i++) {   //check user_
     //cout << user_info[i][0] << endl;   // check run <<<---------------->>>>
         if(user_input == user_info[i].username){
+            status = true ; 
             cout << "Input your password :"  ; 
             cin >> pass_input; 
-            
                 //cout <<"pass :"<< user_info[i][2] << endl;   // check run <<<---------------->>>>
                if(pass_input == user_info[i].password) cout << "correct password "  << endl ; 
                else if(user_info[i].attempt >=3) cout << "Contact Bank to login"; 
@@ -77,12 +74,14 @@ int main(){
                     cout << "Your attempt is : "<<user_info[i].attempt ;
                }
 
-
-
                saveToFile(user_info); 
                break;
-        }else cout << "You Enter wrong username !" ;  break ;
-    }
+        } 
+        
+    } if(status == false){
+        cout << "You Enter wrong username !" << endl ;
+        cout << "Have you had an account yet? " << endl ;
+    }  
 
     file.close(); // ปิดไฟล์เมื่อใช้งานเสร็จ
     return 0;
