@@ -5,19 +5,38 @@
 #include <string> 
 using namespace std;
 
+struct User {
+    string username;
+    string name_surname;
+    string password;
+    int  attempt;
+};
+vector<User> user_info;
+
+
+
+void saveToFile(const vector<User> &user_info) {   //input vector โง่ๆ
+    ofstream outFile("users.csv");
+
+    if (outFile.is_open()) {
+        for (const auto &u : user_info) {  //ใช้ auto เพราะเรื่อง datatype มันจะทำให้เองเลย และ วนจนกว่าจะครบ
+            outFile << u.username << ","
+                    << u.name_surname << ","
+                    << u.password << ","
+                    << u.attempt << "\n";
+        }
+        outFile.close();
+    }
+}
+
 int main(){
     ifstream file("users.csv") ;
     string line ; 
-    vector<vector<string>> user_info ;
-
+    
     if (!file.is_open()) {
         cerr << "can not open ! " << endl; 
         return 1 ; 
     }
-
-
-
-
 
     while (getline(file, line)){
         stringstream ss(line);  //ถ้าไม่ใช่จะแยกบรรทัดไม่ได้
@@ -27,25 +46,42 @@ int main(){
     while (getline(ss, value, ',')) {
             blow.push_back(value);
         }
-        user_info.push_back(blow);   //assing ใส่ เวกเตอร์ 2 มิติ
+        //user_info.push_back(blow);   //assing ใส่ เวกเตอร์ 2 มิติ
         
+        if (blow.size() >= 4) {
+            User u;
+            u.username = blow[0];
+            u.name_surname = blow[1];
+            u.password = blow[2];
+            u.attempt = stoi(blow[3]); // แปลง string เป็น int
+            
+            user_info.push_back(u);
+        }
+
     }
     string user_input,pass_input; 
     cout << "Input your username :" ; 
     cin >> user_input; 
     for (int i = 0; i < user_info.size(); i++) {   //check user_
     //cout << user_info[i][0] << endl;   // check run <<<---------------->>>>
-        if(user_input == user_info[i][0]){
+        if(user_input == user_info[i].username){
             cout << "Input your password :"  ; 
             cin >> pass_input; 
             
                 //cout <<"pass :"<< user_info[i][2] << endl;   // check run <<<---------------->>>>
-               if(pass_input == user_info[i][2]) cout << "correct password "  << endl ; 
+               if(pass_input == user_info[i].password) cout << "correct password "  << endl ; 
+               else if(user_info[i].attempt >=3) cout << "Contact Bank to login"; 
                else {
-                    user_info[i][3] = "1" ; 
-                    cout << user_info[i][3] ;
+                    user_info[i].attempt += 1 ; 
+                    cout << "You enter wrong password " << endl ;
+                    cout << "Your attempt is : "<<user_info[i].attempt ;
                }
-        }
+
+
+
+               saveToFile(user_info); 
+               break;
+        }else cout << "You Enter wrong username !" ;  break ;
     }
 
     file.close(); // ปิดไฟล์เมื่อใช้งานเสร็จ
