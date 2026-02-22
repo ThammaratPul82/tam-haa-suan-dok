@@ -40,7 +40,7 @@ vector<vector<string>> fetch_data(string id)
                     row.push_back(s);
 
                     if (cleanString(s) == "0")
-                        keep = false;
+                        keep = 0;
                 }
             }
             else
