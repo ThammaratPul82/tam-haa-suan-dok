@@ -79,7 +79,6 @@ int main(){
         cin >> password ; 
         cout << "Name : " <<endl;
         cin >> name ; 
-
     }
 
 
