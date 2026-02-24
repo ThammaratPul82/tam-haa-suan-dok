@@ -3,6 +3,7 @@
 #include <sstream> //seperate text by comma 
 #include <vector>
 #include <string> 
+#include <ctime>
 using namespace std;
 
 
@@ -11,6 +12,7 @@ struct User {
     string name_surname;
     string password;
     int  attempt;
+    string date_time ; 
 };
 vector<User> user_info;
 
@@ -23,11 +25,26 @@ void saveToFile(const vector<User> &user_info) {   //input vector โง่ๆ
             outFile << u.username << ","
                     << u.name_surname << ","
                     << u.password << ","
-                    << u.attempt << "\n";
+                    << u.attempt << ","
+                    << u.date_time << "\n" ;
         }
         outFile.close();
     }
 }
+
+
+
+string getCurrentDate() {
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    char buffer[11]; 
+    strftime(buffer, sizeof(buffer), "%d/%m/%Y", ltm);
+    return string(buffer);
+}
+
+
+
+
 
 
 int main(){
@@ -48,12 +65,13 @@ int main(){
             blow.push_back(value);
         }
         //user_info.push_back(blow);   //assing ใส่ เวกเตอร์ 2 มิติ       
-        if (blow.size() >= 4) {
+        if (blow.size() >= 5) {
             User u;
             u.username = blow[0];
             u.name_surname = blow[1];
             u.password = blow[2];
-            u.attempt = stoi(blow[3]); // แปลง string เป็น int          
+            u.attempt = stoi(blow[3]); // แปลง string เป็น int    
+            u.date_time = blow[4];      
             user_info.push_back(u);
         }
 
@@ -73,16 +91,17 @@ int main(){
   
     }
 
-    if (state_username == true)  cout << "Account already exists" ; 
+    if (state_username == true)  cout << "------- Account already exists -------" ; 
     else {
-        cout << "Password : " <<endl; 
+        cout << "Password : " ; 
         cin >> password ; 
-        cout << "Name : " <<endl;
-        cin >> name ; 
-    }
-
-
-
-    user_info.push_back({username, name, password, 0});
+        cout << "Name : " ;
+        cin.ignore();
+        getline(cin, name) ; 
+        user_info.push_back({username, name, password, 0, getCurrentDate()});
+        cout << "------- Registration successful -------" ;
+        
+    }   
     saveToFile(user_info);
+    
 }
