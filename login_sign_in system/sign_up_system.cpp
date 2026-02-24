@@ -83,8 +83,6 @@ int main(){
 
 
 
-
-
     user_info.push_back({username, name, password, 0});
     saveToFile(user_info);
 }
