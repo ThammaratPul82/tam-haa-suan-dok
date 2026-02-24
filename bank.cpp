@@ -4,20 +4,19 @@
 #define ID_BTN_SIGNIN 2
 #define ID_BTN_EXIT 3
 
-HFONT hFont, hTitleFont; // ตัวแปรสำหรับเก็บฟอนต์
+HFONT hFont, hTitleFont; 
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     switch (msg) {
         case WM_CREATE: {
-            // 1. สร้างฟอนต์ (ขนาด 20 สำหรับปุ่ม, ขนาด 48 สำหรับหัวข้อ)
+            // ขนาด 20 สำหรับปุ่ม, ขนาด 48 สำหรับหัวข้อ
             hFont = CreateFont(20, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, "Segoe UI");
             hTitleFont = CreateFont(50, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, "Segoe UI");
 
-            // 2. สร้างหัวข้อธนาคาร
             HWND hTitle = CreateWindow("Static", "FAM SOD BANK", WS_VISIBLE | WS_CHILD | SS_CENTER, 0, 80, 800, 70, hwnd, NULL, NULL, NULL);
             SendMessage(hTitle, WM_SETFONT, (WPARAM)hTitleFont, TRUE);
 
-            // 3. สร้างปุ่มและใส่ฟอนต์
+            // ปุ่ม
             HWND btn1 = CreateWindow("Button", "LOG-IN", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 300, 250, 200, 50, hwnd, (HMENU)ID_BTN_LOGIN, NULL, NULL);
             HWND btn2 = CreateWindow("Button", "SIGN IN", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 300, 320, 200, 50, hwnd, (HMENU)ID_BTN_SIGNIN, NULL, NULL);
             HWND btn3 = CreateWindow("Button", "EXIT", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 300, 450, 200, 40, hwnd, (HMENU)ID_BTN_EXIT, NULL, NULL);
@@ -29,11 +28,10 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
         }
 
         case WM_CTLCOLORSTATIC: {
-            // 4. ทำให้พื้นหลังตัวหนังสือโปร่งใสและเปลี่ยนสีตัวอักษรเป็นสีขาว
             HDC hdcStatic = (HDC)wp;
             SetTextColor(hdcStatic, RGB(255, 255, 255)); // สีขาว
             SetBkMode(hdcStatic, TRANSPARENT);
-            return (INT_PTR)CreateSolidBrush(RGB(0, 100, 0)); // สีเขียวเข้มเดียวกับพื้นหลัง
+            return (INT_PTR)CreateSolidBrush(RGB(0, 100, 0)); // สีเขียวเข้ม
         }
 
         case WM_COMMAND:
@@ -41,7 +39,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
             break;
 
         case WM_DESTROY:
-            DeleteObject(hFont); // ลบฟอนต์ออกจากหน่วยความจำเมื่อปิดโปรแกรม
+            DeleteObject(hFont);
             DeleteObject(hTitleFont);
             PostQuitMessage(0);
             break;
@@ -72,4 +70,5 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
         DispatchMessage(&msg);
     }
     return 0;
+
 }
