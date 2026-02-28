@@ -44,11 +44,12 @@ void transfer_system(){
         getline (ss,id,',');
         getline (ss,b,',');
         getline (ss,time);
+        getline (ss,boo);
 
         if (id.empty() || b.empty()) continue;
 
         try {
-            account.push_back({id, stod(b), time});
+            account.push_back({id, stod(b), time, true});
         } catch (...) {
             continue; 
         }
@@ -114,7 +115,8 @@ void transfer_system(){
     for (const auto &acc : account) {
         fileout << acc.id << "," 
                 << fixed << setprecision(2) << acc.balance << "," 
-                << acc.time << "\n";
+                << acc.time << ","
+                << "1" << endl;
     }
     fileout.close();
 

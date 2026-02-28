@@ -41,12 +41,13 @@ void withdraw_system(){
         string id,b,time,boo;
         getline (ss,id,',');
         getline (ss,b,',');
-        getline (ss,time);
+        getline (ss,time,',');
+        getline (ss,boo);
 
         if (id.empty() || b.empty()) continue;
 
         try {
-            account.push_back({id, stod(b), time});
+            account.push_back({id, stod(b), time, true});
         } catch (...) {
             continue; 
         }
@@ -97,7 +98,8 @@ void withdraw_system(){
         for (const auto &acc : account) {
             fileout << acc.id << "," 
                     << fixed << setprecision(2) << acc.balance << "," 
-                    << acc.time << endl;
+                    << acc.time << "," 
+                    << "1" << endl;
                     
         }
         fileout.close();
