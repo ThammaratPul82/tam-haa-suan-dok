@@ -1,0 +1,5 @@
+g++ bank.cpp login.cpp signin.cpp user_system.cpp -o bank.exe -lgdi32 -luser32 -mwindows
+
+
+g++ bank.cpp login.cpp signin.cpp user_system.cpp -o bank.exe -mwindows -lgdi32 -luser32 -lgdiplus
+.\bank
