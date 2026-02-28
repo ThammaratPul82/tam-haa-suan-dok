@@ -56,9 +56,9 @@ void deposit_system(){
     //input
     cout << "-----ฝากเงิน------" << "\n";
     
-    cout << "กรุณากรอกเลขบัญชี (จำนวน 6 หลัก) : " ;
+    cout << "กรุณากรอกเลขบัญชี (จำนวน 9 หลัก) : " ;
     cin >> findid;
-    if(findid.length() != 6) {
+    if(findid.length() != 9) {
         cout << "เลขบัญชีไม่ถูกต้อง";
         return;
     }
