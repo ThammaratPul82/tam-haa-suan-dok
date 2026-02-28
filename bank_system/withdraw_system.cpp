@@ -15,6 +15,7 @@ struct Acc{
     string name;
     string password;
     int attemp;
+    string day;
     double balance;
 };
 
@@ -40,11 +41,12 @@ void withdraw_system(){
     while(getline(filein,line)){
         if(line.empty()) continue;
         stringstream ss(line);
-        string id, name, pass, att, b;
+        string id, name, pass, att,day,b;
         getline(ss, id, ',');
         getline(ss, name, ',');
         getline(ss, pass, ',');
         getline(ss, att, ',');
+        getline(ss, day, ',');
         getline(ss, b);
 
         if (id.empty() || b.empty()) continue;
@@ -52,7 +54,7 @@ void withdraw_system(){
         try {
             int attempt = stoi(att);
             double balance = stod(b);
-            account.push_back({id, name, pass, attempt, balance});
+            account.push_back({id, name, pass, attempt, day,balance});
         } catch (...) {
             continue; 
         }
@@ -105,6 +107,7 @@ void withdraw_system(){
                   << acc.name << "," 
                   << acc.password << "," 
                   << acc.attemp << "," 
+                  << acc.day << ","
                   << fixed << setprecision(2) << acc.balance << "\n";
         }
         fileb.close();
