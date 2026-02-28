@@ -8,13 +8,14 @@
 
 using namespace std;
 
-//update19/2/26 1
+
 
 struct Acc{
     string id;
+    string name;
+    string password;
+    int attemp;
     double balance;
-    string time;
-    bool status;
 };
 
 string getCurrentTime() {
@@ -31,31 +32,34 @@ void transfer_system(){
     string findidl;
     double amount;
     vector<Acc> account;
+    string time;
     bool dep = false;
     bool w = false;
 
     //open file 
-    ifstream filein("database.csv");
+    ifstream filein("balance.csv"); //add new path of balance
     string line;
     while(getline(filein,line)){
         if(line.empty()) continue;
         stringstream ss(line);
-        string id,b,time,boo;
-        getline (ss,id,',');
-        getline (ss,b,',');
-        getline (ss,time);
-        getline (ss,boo);
+        string id, name, pass, att, b;
+        getline(ss, id, ',');
+        getline(ss, name, ',');
+        getline(ss, pass, ',');
+        getline(ss, att, ',');
+        getline(ss, b);
 
         if (id.empty() || b.empty()) continue;
 
         try {
-            account.push_back({id, stod(b), time, true});
+            int attempt = stoi(att);
+            double balance = stod(b);
+            account.push_back({id, name, pass, attempt, balance});
         } catch (...) {
             continue; 
         }
     }
     filein.close();
-
     //input
     cout << "-----โอนเงิน------" << "\n";
     
@@ -104,27 +108,40 @@ void transfer_system(){
     }
 
     sender->balance -= amount;
-    sender->time = getCurrentTime();
-
     receiver->balance += amount;
-    receiver->time = getCurrentTime();
-
-
-    //save
-    ofstream fileout("database.csv");
+    time = getCurrentTime();
+    
+     //save
+    ofstream fileb("balance.csv");
     for (const auto &acc : account) {
-        fileout << acc.id << "," 
-                << fixed << setprecision(2) << acc.balance << "," 
-                << acc.time << ","
-                << "1" << endl;
+        fileb << acc.id << "," 
+              << acc.name << ","
+              << acc.password << ","
+              << acc.attemp << ","
+              << fixed << setprecision(2) << acc.balance << "\n";
     }
-    fileout.close();
+    fileb.close();
 
+    ofstream filed("database.csv", ios::app);
+    if (filed) {
+        filed << sender->id << "," 
+              << "0.00,"                                     
+              << fixed << setprecision(2) << amount << ","   
+              << time << "," 
+              << "1" << "\n";
+        filed << receiver->id << "," 
+              << fixed << setprecision(2) << amount << ","   
+              << "0.00,"                                     
+              << time << "," 
+              << "1" << "\n";
+              
+        filed.close();
+    }
     // แสดงผลสำเร็จ
     cout << "\n----- โอนเงินสำเร็จ -----\n";
     cout << "โอนเงินไปยังบัญชี : " << receiver->id << "\n";
     cout << "จำนวนเงิน       : " << fixed << setprecision(2) << amount << " บาท\n";
-    cout << "เวลาทำรายการ    : " << sender->time << "\n";
+    cout << "เวลาทำรายการ    : " << time << "\n";
     cout << "ยอดเงินคงเหลือของคุณ: " << fixed << setprecision(2) << sender->balance << " บาท\n";
 }
 

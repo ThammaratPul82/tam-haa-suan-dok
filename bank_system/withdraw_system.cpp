@@ -12,9 +12,10 @@ using namespace std;
 
 struct Acc{
     string id;
+    string name;
+    string password;
+    int attemp;
     double balance;
-    string time;
-    bool status;
 };
 
 string getCurrentTime() {
@@ -31,23 +32,27 @@ void withdraw_system(){
     double amount;
     vector<Acc> account;
     bool w = false;
+    string time;
 
     //open file 
-    ifstream filein("database.csv");
+    ifstream filein("balance.csv"); //add new path of balance
     string line;
     while(getline(filein,line)){
         if(line.empty()) continue;
         stringstream ss(line);
-        string id,b,time,boo;
-        getline (ss,id,',');
-        getline (ss,b,',');
-        getline (ss,time,',');
-        getline (ss,boo);
+        string id, name, pass, att, b;
+        getline(ss, id, ',');
+        getline(ss, name, ',');
+        getline(ss, pass, ',');
+        getline(ss, att, ',');
+        getline(ss, b);
 
         if (id.empty() || b.empty()) continue;
 
         try {
-            account.push_back({id, stod(b), time, true});
+            int attempt = stoi(att);
+            double balance = stod(b);
+            account.push_back({id, name, pass, attempt, balance});
         } catch (...) {
             continue; 
         }
@@ -83,10 +88,10 @@ void withdraw_system(){
 
             // คำนวณยอดใหม่
             acc.balance -= amount;         
-            acc.time = getCurrentTime();
+            time = getCurrentTime();
             w = true;
             cout << "-----ถอนเงินสำเร็จ-----" << "\n";
-            cout << "เวลาทำรายการ  : " << acc.time<< "\n";
+            cout << "เวลาทำรายการ  : " << time<< "\n";
             cout << "ยอดเงินคงเหลือ : " << fixed << setprecision(2) << acc.balance << " บาท\n";
             break;
         }
@@ -94,15 +99,27 @@ void withdraw_system(){
 
     //save
     if (w) {
-        ofstream fileout("database.csv");
+        ofstream fileb("balance.csv");
         for (const auto &acc : account) {
-            fileout << acc.id << "," 
-                    << fixed << setprecision(2) << acc.balance << "," 
-                    << acc.time << "," 
-                    << "1" << endl;
-                    
+            fileb << acc.id << "," 
+                  << acc.name << "," 
+                  << acc.password << "," 
+                  << acc.attemp << "," 
+                  << fixed << setprecision(2) << acc.balance << "\n";
         }
-        fileout.close();
+        fileb.close();
+
+        ofstream filed("database.csv", ios::app);
+        if (filed) {
+            filed << findid << "," 
+                  <<"0.00,"
+                  << fixed << setprecision(2) << amount << "," 
+                  << time << "," 
+                  << "1" << "\n";
+        
+        filed.close();
+        }
+            
     } else {
         cout << "ไม่พบเลขบัญชีในระบบ (" << findid << ")\n";
     }
