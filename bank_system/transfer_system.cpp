@@ -1,32 +1,13 @@
+#include "transfer.h"
+#include "all.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <string>
 #include <sstream>
 #include <iomanip> 
-#include <ctime>
+
 
 using namespace std;
-
-
-
-struct Acc{
-    string id;
-    string name;
-    string password;
-    int attemp;
-    string day;
-    double balance;
-};
-
-string getCurrentTime() {
-    time_t now = time(0);
-    tm *ltm = localtime(&now);
-    char buffer[80];
-    strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M:%S", ltm);
-    return string(buffer);
-}
-
 
 void transfer_system(){
     string findidf;
@@ -149,8 +130,4 @@ void transfer_system(){
 }
 
 
-int main() {
-    transfer_system();
-    return 0;
-}
 

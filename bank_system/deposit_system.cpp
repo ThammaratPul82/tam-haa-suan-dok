@@ -1,32 +1,13 @@
+#include "deposit.h"
+#include "all.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <string>
 #include <sstream>
 #include <iomanip> 
-#include <ctime>
+
 
 using namespace std;
-
-//update19/2/26 1
-
-struct Acc{
-    string id;
-    string name;
-    string password;
-    int attemp;
-    string day;
-    double balance;
-};
-
-string getCurrentTime() {
-    time_t now = time(0);
-    tm *ltm = localtime(&now);
-    char buffer[80];
-    strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M:%S", ltm);
-    return string(buffer);
-}
-
 
 void deposit_system(){
     string findid;
@@ -118,10 +99,5 @@ void deposit_system(){
     } else {
         cout << "ไม่พบเลขบัญชีในระบบ (" << findid << ")\n";
     }
-}
-
-int main() {
-    deposit_system();
-    return 0;
 }
 
