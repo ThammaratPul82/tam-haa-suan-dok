@@ -34,9 +34,9 @@ string getSafeFileName() {
     return ss.str();
 }
 
-void generateSlipPNG(string bankID, int type, double amount, double balance) {
+void generateSlipTransferPNG(string bankID1, string n1, string bankID2, string n2, double amount) {
     string savePath = "C:/Users/Admin/Pictures/slips/";
-    string templatePath = "E:/Projects/p1/generateSlip/template.png";
+    string templatePath = "E:/Projects/p1/generateSlip/templateTransfer.png";
 
     Mat slip = imread(templatePath);
     if (slip.empty()) {
@@ -55,23 +55,17 @@ void generateSlipPNG(string bankID, int type, double amount, double balance) {
     Size timeSize = getTextSize(displayTime, font, 1.2, 1, 0);
     putText(slip, displayTime, Point((imgWidth - timeSize.width) / 2, 640), font, 1.2, black, 1, LINE_AA);
 
-    putText(slip, bankID, Point(850, 785), font, 1.2, black, 2, LINE_AA);
-
-    string typeStr = (type == 1) ? "DEPOSIT" : "WITHDRAWAL";
-    Size typeSize = getTextSize(typeStr, font, 1.2, 1, 0);
-    putText(slip, typeStr, Point((imgWidth - typeSize.width) / 2, 915), font, 1.2, black, 1, LINE_AA);
-
     stringstream ssAmt;
     ssAmt << fixed << setprecision(2) << amount;
     string amtStr = ssAmt.str();
     Size amtSize = getTextSize(amtStr, font, 2.8, 3, 0);
-    putText(slip, amtStr, Point((imgWidth - amtSize.width) / 2, 1210), font, 2.8, green, 3, LINE_AA);
+    putText(slip, amtStr, Point((imgWidth - amtSize.width) / 2, 965), font, 2.8, green, 3, LINE_AA);
 
-    stringstream ssBal;
-    ssBal << fixed << setprecision(2) << balance;
-    string balStr = ssBal.str();
-    Size balSize = getTextSize(balStr, font, 2.5, 2, 0);
-    putText(slip, balStr, Point((imgWidth - balSize.width) / 2, 1640), font, 2.25, black, 2, LINE_AA);
+    putText(slip, n1, Point(516, 1262), font, 2, black, 2, LINE_AA);
+    putText(slip, bankID1, Point(513, 1370), font, 1.7, black, 2, LINE_AA);
+
+    putText(slip, n2, Point(516, 1550), font, 2, black, 2, LINE_AA);
+    putText(slip, bankID2, Point(513, 1666), font, 1.7, black, 2, LINE_AA);
 
     string filename = "Slip_" + safeTime + ".png";
     vector<int> compression_params = {IMWRITE_PNG_COMPRESSION, 0};
@@ -83,16 +77,17 @@ void generateSlipPNG(string bankID, int type, double amount, double balance) {
 }
 
 int main(int argc, char* argv[]) {
-    if (argc < 5) {
-        cout << "[System] No arguments found.\n";
+    if (argc < 6) { 
+        cout << "[System] Usage: id1 n1 id2 n2 amount\n";
         return 0;
     }
 
-    string id = argv[1];
-    int type = atoi(argv[2]);
-    double amount = stod(argv[3]);
-    double balance = stod(argv[4]);
+    string id1 = argv[1];
+    string name1 = argv[2]; 
+    string id2 = argv[3];
+    string name2 = argv[4];
+    double amount = stod(argv[5]);
 
-    generateSlipPNG(id, type, amount, balance);
+    generateSlipTransferPNG(id1, name1, id2, name2, amount); 
     return 0;
 }
