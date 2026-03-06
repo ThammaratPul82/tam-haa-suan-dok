@@ -18,6 +18,7 @@ extern std::vector<User> user_info;
 void loadUsers();
 void saveToFile();
 std::string getCurrentDate();
+std::string getCurrentTime();
 
 double getBalance(const std::string& username);
 

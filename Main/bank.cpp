@@ -3,6 +3,9 @@
 #include "login.h"
 #include "sign-in.h"
 #include "user_system.h"
+#include "deposit.h"
+#include "withdraw.h"
+#include "transfer.h"
 
 #include <gdiplus.h>
 #pragma comment(lib, "Gdiplus.lib")
@@ -15,9 +18,15 @@ using namespace Gdiplus;
 #define ID_BTN_BACK         5
 #define ID_BTN_SIGN_IN_DO   6
 #define ID_BTN_DEPOSITE     7
-#define ID_BTN_WITHDRAW     8 
-#define ID_BTN_TRANSFER     9
-#define ID_BTN_LOGOUT       10
+#define ID_BTN_DEPOSITE_DO  8
+#define ID_BTN_WITHDRAW     9 
+#define ID_BTN_WITHDRAW_DO  10 
+#define ID_BTN_TRANSFER     11
+#define ID_BTN_TRANSFER_DO  12
+#define ID_BTN_LOGOUT       13
+#define ID_BTN_HOME         14
+#define ID_BTN_STATEMENT    15
+
 
 HFONT hFont, hTitleFont;
 
@@ -42,6 +51,27 @@ HWND btnLog;
 
 //AccBalan
 HWND hStaticBalance, hStaticAccount;
+HWND lblAmount , hEditAmount;
+HWND btnDep_do;
+HWND lblAcPass , hEditPass_Ac;
+
+HWND btnWith_do;
+
+HWND lblto_user , lblAmount_tran , lblPass_tran;
+HWND hEditTo_user , hEditAmount_tran , hEditPass_tran;
+
+HWND btnTran_do;
+
+HWND btnHome , btnLogout;
+
+
+// HBRUSH hEditBg;
+HPEN hEditBorder;
+HPEN hEditBorderFocus;
+
+HWND focusedEdit = NULL;
+
+HBRUSH hEditBg = CreateSolidBrush(RGB(0,120,0)); // สีเขียว
 
 double userBalance ; // ยอดเงินเริ่มต้น
 std::string currentUser = "";
@@ -50,8 +80,14 @@ char balText[100];
 HBRUSH hBrushBg;
 ULONG_PTR gdiplusToken;
 Image* imgDeposit = nullptr;
+Image* imgWithdraw = nullptr;
+Image* imgTransfer = nullptr;
+Image* imgHome = nullptr;
+Image* imgLogout = nullptr;
 
-void ShowMainMenu() {
+bool loginPressed = false;
+
+void ShowMainMenu(HWND hwnd) {
     ShowWindow(btnLoginMenu, SW_SHOW);
     ShowWindow(btnSigninMenu, SW_SHOW);
     ShowWindow(btnExit, SW_SHOW);
@@ -73,6 +109,27 @@ void ShowMainMenu() {
 
     ShowWindow(hStaticBalance, SW_HIDE);
     ShowWindow(hStaticAccount, SW_HIDE);
+
+    ShowWindow(hEditAmount,SW_HIDE);
+    ShowWindow(lblAmount,SW_HIDE);
+    ShowWindow(lblAcPass , SW_HIDE);
+    ShowWindow(hEditPass_Ac , SW_HIDE);
+    ShowWindow(btnDep_do , SW_HIDE);
+    ShowWindow(btnWith_do , SW_HIDE);
+
+    ShowWindow(lblto_user , SW_HIDE);
+    ShowWindow(lblAmount_tran , SW_HIDE);
+    ShowWindow(lblPass_tran , SW_HIDE);
+    ShowWindow(hEditAmount_tran , SW_HIDE);
+    ShowWindow(hEditPass_tran , SW_HIDE);
+    ShowWindow(hEditTo_user , SW_HIDE);
+    ShowWindow(btnTran_do , SW_HIDE);
+    
+    ShowWindow(btnHome , SW_HIDE);
+    ShowWindow(btnLogout , SW_HIDE);
+
+    InvalidateRect(hwnd, NULL, TRUE); // refresh หน้าจอ
+
 }
 
 void ShowLoginPage() {
@@ -97,6 +154,26 @@ void ShowLoginPage() {
 
     ShowWindow(hStaticBalance, SW_HIDE);
     ShowWindow(hStaticAccount, SW_HIDE);
+
+    ShowWindow(hEditAmount,SW_HIDE);
+    ShowWindow(lblAmount,SW_HIDE);
+    ShowWindow(lblAcPass , SW_HIDE);
+    ShowWindow(hEditPass_Ac , SW_HIDE);
+    ShowWindow(btnDep_do , SW_HIDE);
+    ShowWindow(btnWith_do , SW_HIDE);
+
+    ShowWindow(lblto_user , SW_HIDE);
+    ShowWindow(lblAmount_tran , SW_HIDE);
+    ShowWindow(lblPass_tran , SW_HIDE);
+    ShowWindow(hEditAmount_tran , SW_HIDE);
+    ShowWindow(hEditPass_tran , SW_HIDE);
+    ShowWindow(hEditTo_user , SW_HIDE);
+    ShowWindow(btnTran_do , SW_HIDE);
+
+    ShowWindow(btnHome , SW_HIDE);
+    ShowWindow(btnLogout , SW_HIDE);
+    
+
 }
 
 void ShowSigninPage(){
@@ -121,8 +198,28 @@ void ShowSigninPage(){
 
     ShowWindow(hStaticBalance, SW_HIDE);
     ShowWindow(hStaticAccount, SW_HIDE);
+
+    ShowWindow(hEditAmount,SW_HIDE);
+    ShowWindow(lblAmount,SW_HIDE);
+    ShowWindow(lblAcPass , SW_HIDE);
+    ShowWindow(hEditPass_Ac , SW_HIDE);
+    ShowWindow(btnDep_do , SW_HIDE);
+    ShowWindow(btnWith_do , SW_HIDE);
+
+    ShowWindow(lblto_user , SW_HIDE);
+    ShowWindow(lblAmount_tran , SW_HIDE);
+    ShowWindow(lblPass_tran , SW_HIDE);
+    ShowWindow(hEditAmount_tran , SW_HIDE);
+    ShowWindow(hEditPass_tran , SW_HIDE);
+    ShowWindow(hEditTo_user , SW_HIDE);
+    ShowWindow(btnTran_do , SW_HIDE);
+    
+    ShowWindow(btnHome , SW_HIDE);
+    ShowWindow(btnLogout , SW_HIDE);
+
+
 }
-void AccoutPage(){
+void AccoutPage(HWND hwnd){
     ShowWindow(btnLoginMenu, SW_HIDE);
     ShowWindow(btnSigninMenu, SW_HIDE);
     ShowWindow(btnExit, SW_HIDE);
@@ -144,8 +241,45 @@ void AccoutPage(){
 
     ShowWindow(hStaticBalance, SW_SHOW);
     ShowWindow(hStaticAccount, SW_SHOW);
+
+    ShowWindow(hEditAmount,SW_HIDE);
+    ShowWindow(lblAmount,SW_HIDE);
+    ShowWindow(lblAcPass , SW_HIDE);
+    ShowWindow(hEditPass_Ac , SW_HIDE);
+    ShowWindow(btnDep_do , SW_HIDE);
+    ShowWindow(btnWith_do , SW_HIDE);
+
+    ShowWindow(lblto_user , SW_HIDE);
+    ShowWindow(lblAmount_tran , SW_HIDE);
+    ShowWindow(lblPass_tran , SW_HIDE);
+    ShowWindow(hEditAmount_tran , SW_HIDE);
+    ShowWindow(hEditPass_tran , SW_HIDE);
+    ShowWindow(hEditTo_user , SW_HIDE);
+    ShowWindow(btnTran_do , SW_HIDE);
+
+    ShowWindow(btnHome , SW_HIDE);
+    ShowWindow(btnLogout , SW_SHOW);
+
+
+    InvalidateRect(hwnd, NULL, TRUE); // refresh หน้าจอ
+
+
 }
 void Showdeposit(){
+    ShowWindow(btnLoginMenu, SW_HIDE);
+    ShowWindow(btnSigninMenu, SW_HIDE);
+    ShowWindow(btnExit, SW_HIDE);
+
+    ShowWindow(hEditUser, SW_HIDE);
+    ShowWindow(hEditPass, SW_HIDE);
+    ShowWindow(hEditName, SW_HIDE);
+    ShowWindow(btnLoginDo, SW_HIDE);
+    ShowWindow(btnBack, SW_HIDE);
+    ShowWindow(lblUser, SW_HIDE);
+    ShowWindow(lblPass, SW_HIDE);
+    ShowWindow(lblName , SW_HIDE);
+    ShowWindow(btnSigninDo, SW_HIDE);
+
     ShowWindow(btnDep, SW_HIDE);
     ShowWindow(btnWit, SW_HIDE);
     ShowWindow(btnTra, SW_HIDE);
@@ -153,6 +287,140 @@ void Showdeposit(){
 
     ShowWindow(hStaticBalance, SW_SHOW);
     ShowWindow(hStaticAccount, SW_SHOW);
+
+    ShowWindow(hEditAmount,SW_SHOW);
+    ShowWindow(lblAmount,SW_SHOW);
+    ShowWindow(lblAcPass , SW_SHOW);
+    ShowWindow(hEditPass_Ac , SW_SHOW);
+    ShowWindow(btnDep_do , SW_SHOW);
+    ShowWindow(btnWith_do , SW_HIDE);
+
+    ShowWindow(lblto_user , SW_HIDE);
+    ShowWindow(lblAmount_tran , SW_HIDE);
+    ShowWindow(lblPass_tran , SW_HIDE);
+    ShowWindow(hEditAmount_tran , SW_HIDE);
+    ShowWindow(hEditPass_tran , SW_HIDE);
+    ShowWindow(hEditTo_user , SW_HIDE);
+    ShowWindow(btnTran_do , SW_HIDE);
+
+    ShowWindow(btnHome , SW_SHOW);
+    ShowWindow(btnLogout , SW_HIDE);
+
+}
+
+void ShowWithdrawPage(){
+    ShowWindow(btnLoginMenu, SW_HIDE);
+    ShowWindow(btnSigninMenu, SW_HIDE);
+    ShowWindow(btnExit, SW_HIDE);
+
+    ShowWindow(hEditUser, SW_HIDE);
+    ShowWindow(hEditPass, SW_HIDE);
+    ShowWindow(hEditName, SW_HIDE);
+    ShowWindow(btnLoginDo, SW_HIDE);
+    ShowWindow(btnBack, SW_HIDE);
+    ShowWindow(lblUser, SW_HIDE);
+    ShowWindow(lblPass, SW_HIDE);
+    ShowWindow(lblName , SW_HIDE);
+    ShowWindow(btnSigninDo, SW_HIDE);
+
+    ShowWindow(btnDep, SW_HIDE);
+    ShowWindow(btnWit, SW_HIDE);
+    ShowWindow(btnTra, SW_HIDE);
+    ShowWindow(btnLog, SW_HIDE);
+
+    ShowWindow(hStaticBalance, SW_SHOW);
+    ShowWindow(hStaticAccount, SW_SHOW);
+
+    ShowWindow(hEditAmount,SW_SHOW);
+    ShowWindow(lblAmount,SW_SHOW);
+    ShowWindow(lblAcPass , SW_SHOW);
+    ShowWindow(hEditPass_Ac , SW_SHOW);
+    ShowWindow(btnDep_do , SW_HIDE);
+    ShowWindow(btnWith_do , SW_SHOW);
+
+    ShowWindow(lblto_user , SW_HIDE);
+    ShowWindow(lblAmount_tran , SW_HIDE);
+    ShowWindow(lblPass_tran , SW_HIDE);
+    ShowWindow(hEditAmount_tran , SW_HIDE);
+    ShowWindow(hEditPass_tran , SW_HIDE);
+    ShowWindow(hEditTo_user , SW_HIDE);
+    ShowWindow(btnTran_do , SW_HIDE);
+
+    ShowWindow(btnHome , SW_SHOW);
+    ShowWindow(btnLogout , SW_HIDE);
+
+}
+
+void ShowTransferPage(){
+    ShowWindow(btnLoginMenu, SW_HIDE);
+    ShowWindow(btnSigninMenu, SW_HIDE);
+    ShowWindow(btnExit, SW_HIDE);
+
+    ShowWindow(hEditUser, SW_HIDE);
+    ShowWindow(hEditPass, SW_HIDE);
+    ShowWindow(hEditName, SW_HIDE);
+    ShowWindow(btnLoginDo, SW_HIDE);
+    ShowWindow(btnBack, SW_HIDE);
+    ShowWindow(lblUser, SW_HIDE);
+    ShowWindow(lblPass, SW_HIDE);
+    ShowWindow(lblName , SW_HIDE);
+    ShowWindow(btnSigninDo, SW_HIDE);
+
+    ShowWindow(btnDep, SW_HIDE);
+    ShowWindow(btnWit, SW_HIDE);
+    ShowWindow(btnTra, SW_HIDE);
+    ShowWindow(btnLog, SW_HIDE);
+
+    ShowWindow(hStaticBalance, SW_SHOW);
+    ShowWindow(hStaticAccount, SW_SHOW);
+
+    ShowWindow(hEditAmount,SW_HIDE);
+    ShowWindow(lblAmount,SW_HIDE);
+    ShowWindow(lblAcPass , SW_HIDE);
+    ShowWindow(hEditPass_Ac , SW_HIDE);
+    ShowWindow(btnDep_do , SW_HIDE);
+    ShowWindow(btnWith_do , SW_HIDE);
+
+    ShowWindow(lblto_user , SW_SHOW);
+    ShowWindow(lblAmount_tran , SW_SHOW);
+    ShowWindow(lblPass_tran , SW_SHOW);
+    ShowWindow(hEditAmount_tran , SW_SHOW);
+    ShowWindow(hEditPass_tran , SW_SHOW);
+    ShowWindow(hEditTo_user , SW_SHOW);
+    ShowWindow(btnTran_do , SW_SHOW);
+
+    ShowWindow(btnHome , SW_SHOW);
+    ShowWindow(btnLogout , SW_HIDE);
+
+
+}
+
+void DrawBankButton(LPDRAWITEMSTRUCT dis)
+{
+    HDC hdc = dis->hDC;
+    RECT r = dis->rcItem;
+
+    // ลบ focus rectangle
+    if(dis->itemState & ODS_FOCUS)
+        dis->itemState &= ~ODS_FOCUS;
+
+    // สีปุ่ม
+    HBRUSH hBrush = CreateSolidBrush(RGB(0,150,0));
+    FillRect(hdc, &r, hBrush);
+    DeleteObject(hBrush);
+
+    // ขอบมน
+    HPEN hPen = CreatePen(PS_SOLID,2,RGB(0,200,0));
+    SelectObject(hdc,hPen);
+    SelectObject(hdc,GetStockObject(NULL_BRUSH));
+    RoundRect(hdc,r.left,r.top,r.right,r.bottom,20,20);
+    DeleteObject(hPen);
+
+    // ตัวหนังสือ
+    SetTextColor(hdc,RGB(255,255,255));
+    SetBkMode(hdc,TRANSPARENT);
+
+    DrawText(hdc,"LOGIN",-1,&r,DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
@@ -162,7 +430,14 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
     case WM_CREATE:
     {
         loadUsers();
-        imgDeposit = new Image(L"D:\\year1\\1-2\\Compro\\project\\GUI\\dep2.png");
+        hEditBg = CreateSolidBrush(RGB(255,255,255));
+        hEditBorder = CreatePen(PS_SOLID,2,RGB(0,150,0)); // ขอบปกติ
+        hEditBorderFocus = CreatePen(PS_SOLID,2,RGB(0,200,0)); // ตอน focus
+
+        imgDeposit = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\11.png");
+        imgWithdraw = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\12.png");
+        imgTransfer = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\13.png");
+        imgHome = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\4.png");
         hFont = CreateFont(20,0,0,0,FW_NORMAL,FALSE,FALSE,FALSE,
             DEFAULT_CHARSET,OUT_OUTLINE_PRECIS,
             CLIP_DEFAULT_PRECIS,CLEARTYPE_QUALITY,
@@ -181,8 +456,13 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         SendMessage(hTitle, WM_SETFONT, (WPARAM)hTitleFont, TRUE);
 
         // ===== ปุ่มหน้าแรก =====
+        // btnLoginMenu = CreateWindow("Button","LOGIN",
+        //     WS_VISIBLE|WS_CHILD,
+        //     300,250,200,40,
+        //     hwnd,(HMENU)ID_BTN_LOGIN_MENU,NULL,NULL);
+
         btnLoginMenu = CreateWindow("Button","LOGIN",
-            WS_VISIBLE|WS_CHILD,
+            WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
             300,250,200,40,
             hwnd,(HMENU)ID_BTN_LOGIN_MENU,NULL,NULL);
 
@@ -196,29 +476,29 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             300,370,200,40,
             hwnd,(HMENU)ID_BTN_EXIT,NULL,NULL);
 
-        SendMessage(btnLoginMenu, WM_SETFONT, (WPARAM)hFont, TRUE);
+        // SendMessage(btnLoginMenu, WM_SETFONT, (WPARAM)hFont, TRUE);
+        SendMessage(btnLoginMenu, BM_SETSTYLE, BS_OWNERDRAW, TRUE);
         SendMessage(btnSigninMenu, WM_SETFONT, (WPARAM)hFont, TRUE);
         SendMessage(btnExit, WM_SETFONT, (WPARAM)hFont, TRUE);
 
         // ===== หน้า Login (ซ่อนไว้ก่อน) =====
-        lblUser = CreateWindow("Static","Student-ID:",
+        lblUser = CreateWindow("Static","Student-ID :",
             WS_CHILD,250,150,100,25,
             hwnd,NULL,NULL,NULL);
 
         hEditUser = CreateWindow("Edit","",
-            WS_CHILD|WS_BORDER|ES_NUMBER,
-            350,150,200,25,
+            WS_CHILD | ES_NUMBER|ES_AUTOHSCROLL,
+            370,150,200,22,
             hwnd,NULL,NULL,NULL);
         SendMessage(hEditUser, EM_SETLIMITTEXT, 9, 0);
 
-
-        lblPass = CreateWindow("Static","Password:",
+        lblPass = CreateWindow("Static","Password :",
             WS_CHILD,250,200,100,25,
             hwnd,NULL,NULL,NULL);
 
         hEditPass = CreateWindow("Edit","",
-            WS_CHILD|WS_BORDER|ES_PASSWORD|ES_NUMBER,
-            350,200,200,25, 
+            WS_CHILD| ES_PASSWORD|ES_NUMBER,
+            370,200,200,25, 
             hwnd,NULL,NULL,NULL);
         SendMessage(hEditPass, EM_SETLIMITTEXT, 8, 0);
 
@@ -235,7 +515,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             WS_CHILD,
             300,320,200,40,
             hwnd,(HMENU)ID_BTN_LOGIN_DO,NULL,NULL);
-        
+
         btnSigninDo = CreateWindow("Button","SIGN-IN",
             WS_CHILD,
             300,320,200,40,
@@ -256,13 +536,29 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             hwnd, (HMENU)ID_BTN_DEPOSITE,
             ((LPCREATESTRUCT)lp)->hInstance,NULL);
 
-        btnWit = CreateWindow("Button", "WITHDRAW"
-            , WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 
-            310, 300, 180, 80, hwnd, (HMENU)ID_BTN_WITHDRAW, NULL, NULL);
+        btnWit = CreateWindow("Button", "" ,
+            WS_CHILD | BS_OWNERDRAW, 
+            310, 300, 180, 80, 
+            hwnd, (HMENU)ID_BTN_WITHDRAW, 
+            ((LPCREATESTRUCT)lp)->hInstance, NULL);
 
-        btnTra = CreateWindow("Button", "TRANSFER"
-            , WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 
-            520, 300, 180, 80, hwnd, (HMENU)ID_BTN_TRANSFER, NULL, NULL);
+        btnTra = CreateWindow("Button", "" ,
+            WS_CHILD | BS_OWNERDRAW, 
+            520, 300, 180, 80, 
+            hwnd, (HMENU)ID_BTN_TRANSFER,
+            ((LPCREATESTRUCT)lp)->hInstance, NULL);
+
+        btnHome = CreateWindow("Button", "" ,
+            WS_CHILD | BS_OWNERDRAW, 
+            15, 15, 180, 80, 
+            hwnd, (HMENU)ID_BTN_HOME,
+            ((LPCREATESTRUCT)lp)->hInstance, NULL);
+
+        btnLogout = CreateWindow("Button", "" ,
+            WS_CHILD | BS_OWNERDRAW, 
+            500, 10, 180, 80, 
+            hwnd, (HMENU)ID_BTN_LOGOUT,
+            ((LPCREATESTRUCT)lp)->hInstance, NULL);
 
         btnLog = CreateWindow("Button", "EXIT SYSTEM"
             , WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 
@@ -280,16 +576,100 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             0, 150, 800, 60, hwnd, NULL, NULL, NULL);
         SendMessage(hStaticBalance, WM_SETFONT, (WPARAM)hTitleFont, TRUE);
 
+        lblAmount = CreateWindow("Static","Amount :",
+            WS_CHILD,250,220,100,25,
+            hwnd,NULL,NULL,NULL);
+
+        hEditAmount = CreateWindow("Edit","",
+            WS_CHILD | ES_NUMBER |ES_AUTOHSCROLL,
+            370,220,180,22,
+            hwnd,NULL,NULL,NULL);
+        SendMessage(hEditAmount, EM_SETLIMITTEXT, 9, 0);
+
+        lblAcPass = CreateWindow("Static","Password :",
+            WS_CHILD,250,270,100,25,
+            hwnd,NULL,NULL,NULL);
+
+        hEditPass_Ac = CreateWindow("Edit","",
+            WS_CHILD| ES_PASSWORD |ES_NUMBER,
+            370,270,180,25, 
+            hwnd,NULL,NULL,NULL);
+        SendMessage(hEditPass_Ac, EM_SETLIMITTEXT, 8, 0);
+
+        btnDep_do = CreateWindow("Button","Confirm",
+            WS_CHILD | SS_CENTER,
+            320,350,150,50,
+            hwnd,(HMENU)ID_BTN_DEPOSITE_DO,NULL,NULL);
+        
+        btnWith_do = CreateWindow("Button","Confirm",
+            WS_CHILD | SS_CENTER,
+            320,350,150,50,
+            hwnd,(HMENU)ID_BTN_WITHDRAW_DO,NULL,NULL);
+
+         btnTran_do = CreateWindow("Button","Confirm",
+            WS_CHILD | SS_CENTER,
+            320,370,150,50,
+            hwnd,(HMENU)ID_BTN_TRANSFER_DO,NULL,NULL);
+
+
+        lblto_user = CreateWindow("Static","To :",
+            WS_CHILD,250,220,100,25,
+            hwnd,NULL,NULL,NULL);
+
+        hEditTo_user = CreateWindow("Edit","",
+            WS_CHILD | ES_NUMBER |ES_AUTOHSCROLL,
+            370,220,180,22,
+            hwnd,NULL,NULL,NULL);
+        SendMessage(hEditTo_user, EM_SETLIMITTEXT, 9, 0);
+
+        lblAmount_tran = CreateWindow("Static","Amount :",
+            WS_CHILD,250,270,100,25,
+            hwnd,NULL,NULL,NULL);
+
+        hEditAmount_tran = CreateWindow("Edit","",
+            WS_CHILD | ES_NUMBER,
+            370,270,180,25, 
+            hwnd,NULL,NULL,NULL);
+        SendMessage(hEditAmount_tran, EM_SETLIMITTEXT, 8, 0);
+
+        lblPass_tran = CreateWindow("Static","Password :",
+            WS_CHILD,250,320,100,25,
+            hwnd,NULL,NULL,NULL);
+
+        hEditPass_tran = CreateWindow("Edit","",
+            WS_CHILD| ES_PASSWORD |ES_NUMBER,
+            370,320,180,25, 
+            hwnd,NULL,NULL,NULL);
+        SendMessage(hEditPass_tran, EM_SETLIMITTEXT, 8, 0);
+
         SendMessage(btnLoginDo, WM_SETFONT, (WPARAM)hFont, TRUE);
         SendMessage(btnSigninDo, WM_SETFONT, (WPARAM)hFont, TRUE);
+        SendMessage(btnDep_do, WM_SETFONT, (WPARAM)hFont, TRUE);
+        SendMessage(btnWith_do, WM_SETFONT, (WPARAM)hFont, TRUE);
+        SendMessage(btnTran_do, WM_SETFONT, (WPARAM)hFont, TRUE);
         SendMessage(btnBack, WM_SETFONT, (WPARAM)hFont, TRUE);
 
-        ShowMainMenu();
+        ShowMainMenu(hwnd);
         break;
     }
 
     case WM_COMMAND:
     {
+        if(HIWORD(wp) == EN_SETFOCUS)
+        {
+            if((HWND)lp == hEditUser || (HWND)lp == hEditPass)
+            {
+                focusedEdit = (HWND)lp;
+                InvalidateRect(hwnd,NULL,TRUE);
+            }
+        }
+
+        if(HIWORD(wp) == EN_KILLFOCUS)
+        {
+            focusedEdit = NULL;
+            InvalidateRect(hwnd,NULL,TRUE);
+        }
+
         switch (LOWORD(wp))
         {
         case ID_BTN_LOGIN_MENU:
@@ -297,7 +677,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             break;
 
         case ID_BTN_BACK:
-            ShowMainMenu();
+            ShowMainMenu(hwnd);
             break;
 
         case ID_BTN_SIGNIN_MENU:
@@ -317,10 +697,12 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                 userBalance = getBalance(user);
 
                 char balText[100];
-                sprintf(balText, "BALANCE : %.2f THB .", userBalance);
+                snprintf(balText, sizeof(balText), "BALANCE : %.2f THB.", userBalance);
                 SetWindowText(hStaticBalance, balText);
+                // sprintf(balText, "BALANCE : %.2f    THB .", userBalance);
+                // SetWindowText(hStaticBalance, balText);
                 SetWindowText(hStaticAccount, welcome.c_str());
-                AccoutPage(); 
+                AccoutPage(hwnd); 
             }
             break;
         }
@@ -345,9 +727,115 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             break;
 
         }
-        // case ID_BTN_DEPOSITE:
-            // Showdeposit();
-            // break;
+        case ID_BTN_DEPOSITE:
+            Showdeposit();
+            break;
+
+        case ID_BTN_DEPOSITE_DO:
+        {
+            char pass[20];
+            char amountStr[20];
+
+            GetWindowText(hEditPass_Ac, pass, 20);
+            GetWindowText(hEditAmount, amountStr, 20);
+
+            double amount = atof(amountStr);
+
+            if (depositMoney(currentUser, pass, amount))
+            {
+                MessageBox(hwnd,"Deposit Success","Success",MB_OK);
+
+                userBalance = getBalance(currentUser);
+
+                char balText[50];
+                snprintf(balText, sizeof(balText), "BALANCE : %.2f THB.", userBalance);
+                SetWindowText(hStaticBalance, balText);
+            }
+            else
+            {
+                MessageBox(hwnd,"Wrong password","Error",MB_OK);
+            }
+            SetWindowText(hEditAmount, "");
+            SetWindowText(hEditPass_Ac, "");
+        break;
+        }
+        case ID_BTN_WITHDRAW:
+            ShowWithdrawPage();
+            break;
+        
+        case ID_BTN_WITHDRAW_DO:
+        {
+            char pass[20];
+            char amountStr[20];
+
+            GetWindowText(hEditPass_Ac, pass, 20);
+            GetWindowText(hEditAmount, amountStr, 20);
+            // char amountText[50];
+            // GetWindowText(hEditAmount, amountText, 50);
+            // double amount = atof(amountText);
+            
+            double amount = atof(amountStr);
+            // double newBalance;
+
+            if(withdrawMoney(currentUser, pass ,amount, userBalance))
+            {
+
+                MessageBox(hwnd,"Withdraw Success","Success",MB_OK);
+
+                userBalance = getBalance(currentUser);
+
+                char balText[50];
+                snprintf(balText, sizeof(balText), "BALANCE : %.2f THB.", userBalance);
+                SetWindowText(hStaticBalance, balText);
+            }
+            else
+            {
+                MessageBox(hwnd,"Withdraw Failed","Error",MB_OK);
+            }
+            SetWindowText(hEditAmount, "");
+            SetWindowText(hEditPass_Ac, "");
+        }
+        break;
+
+        case ID_BTN_TRANSFER:
+            ShowTransferPage();
+            break;
+
+        case ID_BTN_TRANSFER_DO:
+        {
+            char target[100];
+            char pass[20];
+            char amountStr[20];
+            
+            GetWindowText(hEditTo_user,target,100);
+            GetWindowText(hEditPass_tran, pass, 20);
+            GetWindowText(hEditAmount_tran, amountStr, 20);
+
+            double amount = atof(amountStr);
+
+            if(transferMoney(currentUser,target,pass,amount))
+            {
+                userBalance = getBalance(currentUser);
+
+                 MessageBox(hwnd,"Transfer Success","Success",MB_OK);
+            
+                char balText[50];
+                snprintf(balText, sizeof(balText), "BALANCE : %.2f THB.", userBalance);
+                SetWindowText(hStaticBalance, balText);
+
+            }
+            else
+            {
+                MessageBox(hwnd,"Transfer Failed","Error",MB_OK);
+            }
+            SetWindowText(hEditAmount_tran, "");
+            SetWindowText(hEditPass_tran, "");
+            SetWindowText(hEditTo_user, "");
+        }
+        break;
+        case ID_BTN_HOME:
+            AccoutPage(hwnd);
+            break;
         
         case ID_BTN_EXIT:
         {
@@ -366,21 +854,160 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         return (INT_PTR)hBrushBg;
     }
 
+    case WM_CTLCOLOREDIT:
+    {
+        HDC hdc = (HDC)wp;
+
+        SetTextColor(hdc, RGB(255,255,255));       // สีตัวอักษร
+        SetBkColor(hdc, RGB(0,110,0));             // สีพื้นหลังเหมือน BG
+
+        // return (INT_PTR)hEditBg;            // ใช้พื้นหลังสีเขียวแทน
+        return (INT_PTR)hBrushBg;   // ใช้ brush เดียวกับ background
+    }
+
     case WM_DRAWITEM:
     {
-        LPDRAWITEMSTRUCT dis = (LPDRAWITEMSTRUCT)lp;
+    LPDRAWITEMSTRUCT dis = (LPDRAWITEMSTRUCT)lp;
+
+    dis->itemState &= ~ODS_FOCUS;   // 🔥 ปิด focus rectangle
+
+    // ===== ปุ่ม LOGIN =====
+        if(dis->CtlID == ID_BTN_LOGIN_MENU)
+        {
+            DrawBankButton(dis);
+            return TRUE;
+        }
+
+        // ===== ปุ่ม DEPOSIT =====
         if (dis->CtlID == ID_BTN_DEPOSITE)
         {
             FillRect(dis->hDC, &dis->rcItem, hBrushBg);
 
             Graphics graphics(dis->hDC);
             graphics.DrawImage(imgDeposit,
-            static_cast<INT>(dis->rcItem.left),
-            static_cast<INT>(dis->rcItem.top),
-            static_cast<INT>(dis->rcItem.right - dis->rcItem.left),
-            static_cast<INT>(dis->rcItem.bottom - dis->rcItem.top));
+                static_cast<INT>(dis->rcItem.left),
+                static_cast<INT>(dis->rcItem.top),
+                static_cast<INT>(dis->rcItem.right - dis->rcItem.left),
+                static_cast<INT>(dis->rcItem.bottom - dis->rcItem.top));
 
             return TRUE;
+        }
+        if (dis->CtlID == ID_BTN_WITHDRAW)
+        {
+            FillRect(dis->hDC, &dis->rcItem, hBrushBg);
+
+            Graphics graphics(dis->hDC);
+            graphics.DrawImage(imgWithdraw,
+                static_cast<INT>(dis->rcItem.left),
+                static_cast<INT>(dis->rcItem.top),
+                static_cast<INT>(dis->rcItem.right - dis->rcItem.left),
+                static_cast<INT>(dis->rcItem.bottom - dis->rcItem.top));
+
+            return TRUE;
+        }
+
+        if (dis->CtlID == ID_BTN_TRANSFER)
+        {
+            FillRect(dis->hDC, &dis->rcItem, hBrushBg);
+
+            Graphics graphics(dis->hDC);
+            graphics.DrawImage(imgTransfer,
+                static_cast<INT>(dis->rcItem.left),
+                static_cast<INT>(dis->rcItem.top),
+                static_cast<INT>(dis->rcItem.right - dis->rcItem.left),
+                static_cast<INT>(dis->rcItem.bottom - dis->rcItem.top));
+
+            return TRUE;
+        }
+        if (dis->CtlID == ID_BTN_HOME)
+        {
+            FillRect(dis->hDC, &dis->rcItem, hBrushBg);
+
+            Graphics graphics(dis->hDC);
+            graphics.DrawImage(imgHome,
+                static_cast<INT>(dis->rcItem.left),
+                static_cast<INT>(dis->rcItem.top),
+                static_cast<INT>(dis->rcItem.right - dis->rcItem.left),
+                static_cast<INT>(dis->rcItem.bottom - dis->rcItem.top));
+
+            return TRUE;
+        }
+
+        if (dis->CtlID == ID_BTN_LOGOUT)
+        {
+            FillRect(dis->hDC, &dis->rcItem, hBrushBg);
+
+            Graphics graphics(dis->hDC);
+            graphics.DrawImage(imgLogout,
+                static_cast<INT>(dis->rcItem.left),
+                static_cast<INT>(dis->rcItem.top),
+                static_cast<INT>(dis->rcItem.right - dis->rcItem.left),
+                static_cast<INT>(dis->rcItem.bottom - dis->rcItem.top));
+
+            return TRUE;
+        }
+
+    break;
+    }
+
+    case WM_PAINT:
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hwnd,&ps);
+
+        RECT r;
+
+        // ===== USER BOX =====
+        if(IsWindowVisible(hEditUser))
+        {
+            GetWindowRect(hEditUser,&r);
+            MapWindowPoints(NULL, hwnd, (LPPOINT)&r,2);
+
+            SelectObject(hdc, focusedEdit==hEditUser ? hEditBorderFocus : hEditBorder);
+            SelectObject(hdc, GetStockObject(NULL_BRUSH));
+            RoundRect(hdc,r.left-2,r.top-2,r.right+2,r.bottom+2,10,10);
+        }
+
+        // ===== PASS BOX =====
+        if(IsWindowVisible(hEditPass))
+        {
+            GetWindowRect(hEditPass,&r);
+            MapWindowPoints(NULL, hwnd, (LPPOINT)&r,2);
+
+            SelectObject(hdc, focusedEdit==hEditPass ? hEditBorderFocus : hEditBorder);
+            SelectObject(hdc, GetStockObject(NULL_BRUSH));
+            RoundRect(hdc,r.left-2,r.top-2,r.right+2,r.bottom+2,10,10);
+        }
+
+        EndPaint(hwnd,&ps);
+    }
+    break;
+
+    case WM_LBUTTONDOWN:
+    {
+        POINT pt;
+        pt.x = LOWORD(lp);
+        pt.y = HIWORD(lp);
+
+        RECT rc;
+        GetWindowRect(btnLoginDo, &rc);
+        ScreenToClient(hwnd, (LPPOINT)&rc);
+        ScreenToClient(hwnd, ((LPPOINT)&rc)+1);
+
+        if(PtInRect(&rc, pt))
+        {
+            MoveWindow(btnLoginDo, 302,252,200,40, TRUE);
+            loginPressed = true;
+        }
+    }
+    break;
+
+    case WM_LBUTTONUP:
+    {
+        if(loginPressed)
+        {
+            MoveWindow(btnLoginDo, 300,250,200,40, TRUE);
+            loginPressed = false;
         }
     }
     break;

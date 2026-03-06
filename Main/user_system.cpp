@@ -55,6 +55,14 @@ std::string getCurrentDate() {
     return std::string(buffer);
 }
 
+std::string getCurrentTime() {
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    char buffer[80];
+    strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M:%S", ltm);
+    return std::string(buffer);
+}
+
 double getBalance(const std::string& username)
 {
     for (auto &u : user_info)
