@@ -21,5 +21,7 @@ std::string getCurrentDate();
 std::string getCurrentTime();
 
 double getBalance(const std::string& username);
+bool isValidAmount(const std::string& amount);
+
 
 #endif

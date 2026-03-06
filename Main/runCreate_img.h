@@ -1,0 +1,14 @@
+#include <iostream>
+#include <cstdlib>
+#include <string>
+using namespace std;
+
+void createIMG(string id, string type, string amount, string balance) {
+    string temp = "D:/year1/1-2/Compro/project/tam-haa-suan-dok/Main/create_img.exe " + id + " " + type + " " + amount + " " + balance;
+    system(temp.c_str());
+}
+
+void createSlip(string id1, string n1, string id2, string n2, string amount) {
+    string temp = "D:/year1/1-2/Compro/project/tam-haa-suan-dok/Main/create_transfer.exe " + id1 + " \"" + n1 + "\" " + id2 + " \"" + n2 + "\" " + amount;
+    system(temp.c_str());
+}

@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <regex>
 
 std::vector<User> user_info;
 
@@ -73,4 +74,10 @@ double getBalance(const std::string& username)
         }
     }
     return 0.0;
+}
+
+bool isValidAmount(const std::string& amount)
+{
+    std::regex pattern("^\\d+(\\.\\d{1,2})?$");
+    return std::regex_match(amount, pattern);
 }

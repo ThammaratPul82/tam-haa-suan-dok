@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iomanip>
 
+
 bool transferMoney  (const std::string& fromUser,
                      const std::string& toUser,
                      std::string password,
@@ -56,6 +57,5 @@ bool transferMoney  (const std::string& fromUser,
           << "TRANSFER_IN\n";
 
     filed.close();
-
     return true;
 }

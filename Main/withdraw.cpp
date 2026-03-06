@@ -21,7 +21,7 @@ bool withdrawMoney(std::string username,std::string password, double amount, dou
                 return false;
             if (amount > u.balance)
                 return false;
-                
+
             u.balance -= amount;
 
             saveToFile();

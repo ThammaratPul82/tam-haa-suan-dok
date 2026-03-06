@@ -30,7 +30,6 @@ bool depositMoney(std::string username, std::string password, double amount)
                   << "1\n";
 
             filed.close();
-
             return true;
         }
     }
