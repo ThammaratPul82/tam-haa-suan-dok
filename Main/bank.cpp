@@ -509,18 +509,18 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         hEditBorder = CreatePen(PS_SOLID, 2, RGB(0, 150, 0));      // ขอบปกติ
         hEditBorderFocus = CreatePen(PS_SOLID, 2, RGB(0, 200, 0)); // ตอน focus
 
-        imgLogin = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\1.png");
-        imgSignin = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\2.png");
-        imgExit = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\3.png");
-        imgDeposit = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\11.png");
-        imgWithdraw = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\12.png");
-        imgTransfer = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\13.png");
-        imgHome = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\4.png");
-        imgDep = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\17.png");
-        imgLogout = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\7.png");
-        imgStatement = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\16.png");
-        imgLogin_do = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\18.png");
-        imgSignin_do = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\19.png");
+        imgLogin = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\1.png");
+        imgSignin = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\2.png");
+        imgExit = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\3.png");
+        imgDeposit = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\11.png");
+        imgWithdraw = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\12.png");
+        imgTransfer = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\13.png");
+        imgHome = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\4.png");
+        imgDep = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\17.png");
+        imgLogout = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\7.png");
+        imgStatement = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\16.png");
+        imgLogin_do = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\18.png");
+        imgSignin_do = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\19.png");
 
         hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE,
                            DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
