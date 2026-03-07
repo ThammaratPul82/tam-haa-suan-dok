@@ -4,11 +4,20 @@
 #include <iomanip>
 #include <sstream>
 #include <ctime>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 using namespace cv;
 using namespace std;
 
-string getDisplayTime()         {
+bool isPathExist(std::string path) {
+    if (fs::exists(path)) {
+        return true;
+    }
+    return false;
+} 
+
+string getDisplayTime() {
     time_t now = time(0);
     tm *ltm = localtime(&now);
     stringstream ss;
@@ -34,8 +43,10 @@ string getSafeFileName() {
     return ss.str();
 }
 
-void generateSlipPNG(string bankID, int type, double amount, double balance) {
+void generateSlipPNG(string bankID, int type, double amount, double balance) {  
     string savePath = "C:/Users/USER/OneDrive/Pictures/slips/";
+    if (!isPathExist(savePath)) savePath = "C:/Users/Admin/Pictures/slips/";
+
     string templatePath = "D:/year1/1-2/Compro/project/tam-haa-suan-dok/Main/template.png";
 
     Mat slip = imread(templatePath);

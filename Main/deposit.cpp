@@ -2,6 +2,8 @@
 #include "deposit.h"
 #include <fstream>
 #include <iomanip>
+#include "runCreate_img.h"
+#include <string>
 
 bool depositMoney(std::string username, std::string password, double amount)
 {
@@ -30,6 +32,7 @@ bool depositMoney(std::string username, std::string password, double amount)
                   << "1\n";
 
             filed.close();
+            createIMG(u.username, "1", std::to_string(amount), std::to_string(u.balance));
             return true;
         }
     }

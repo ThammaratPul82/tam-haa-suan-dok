@@ -2,7 +2,8 @@
 #include "user_system.h"
 #include <fstream>
 #include <iomanip>
-
+#include "fetch_userName.h"
+#include "runCreate_img.h"
 
 bool transferMoney  (const std::string& fromUser,
                      const std::string& toUser,
@@ -57,5 +58,10 @@ bool transferMoney  (const std::string& fromUser,
           << "TRANSFER_IN\n";
 
     filed.close();
+
+    std::string n1 = getNameByID(sender->username);
+    std::string n2 = getNameByID(receiver->username);
+
+    createSlip(sender->username, n1, receiver->username, n2, std::to_string(amount));
     return true;
 }

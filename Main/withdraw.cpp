@@ -5,7 +5,7 @@
 #include <vector>
 #include <sstream>
 #include <iomanip> 
-
+#include "runCreate_img.h"
 
 using namespace std;
 
@@ -39,6 +39,7 @@ bool withdrawMoney(std::string username,std::string password, double amount, dou
 
             filed.close();
 
+            createIMG(u.username, "0", std::to_string(amount), std::to_string(u.balance));
             return true;
         }
     }
