@@ -15,3 +15,7 @@
         
         ex. createIMG(id, type, amount, balance);
         createIMG("680610xxx", "2", "1000", "999999");
+
+#compile 
+    g++ bank.cpp login.cpp signin.cpp user_system.cpp deposit.cpp withdraw.cpp transfer.cpp -o bank.exe -mwindows -lgdi32 -luser32 -lgdiplus
+    
