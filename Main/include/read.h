@@ -6,7 +6,7 @@
 using namespace std;
 
 vector<vector<string>> fetch_name(string id1, string id2) {
-    ifstream file("users.csv"); 
+    ifstream file("../users.csv"); 
     string line;
     vector<vector<string>> x;
 

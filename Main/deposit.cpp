@@ -1,8 +1,8 @@
-#include "user_system.h"
-#include "deposit.h"
+#include "include/user_system.h"
+#include "include/deposit.h"
 #include <fstream>
 #include <iomanip>
-#include "runCreate_img.h"
+#include "include/runCreate_img.h"
 #include <string>
 
 bool depositMoney(std::string username, std::string password, double amount)

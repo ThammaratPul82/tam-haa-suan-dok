@@ -4,7 +4,7 @@
 #include <sstream>
 
 std::string getNameByID(std::string targetID) {
-    std::ifstream file("users.csv"); 
+    std::ifstream file("../users.csv"); 
     std::string line;
 
     if (!file.is_open()) {
