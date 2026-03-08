@@ -2,39 +2,47 @@
 #include "include/user_system.h"
 #include <fstream>
 #include <iomanip>
-#include "include/fetch_userName.h"
 #include "include/runCreate_img.h"
 
-bool transferMoney  (const std::string& fromUser,
-                     const std::string& toUser,
-                     std::string password,
-                     double amount)
+bool transferMoney(const std::string &fromUser,
+                   const std::string &toUser,
+                   std::string password,
+                   double amount)
 {
     loadUsers();
 
-    User* sender = nullptr;
-    User* receiver = nullptr;
+    User *sender = nullptr;
+    User *receiver = nullptr;
 
     for (auto &u : user_info)
     {
-        if(u.password != password)
-            return false;
-
         if (u.username == fromUser)
             sender = &u;
-
         if (u.username == toUser)
             receiver = &u;
     }
 
-    if (!sender || !receiver)
+    if (!sender || sender->password != password)
+    {
         return false;
+    }
+
+    if (!receiver)
+    {
+        return false;
+    }
 
     if (amount <= 0)
+    {
+        std::cout << "3";
         return false;
+    }
 
     if (amount > sender->balance)
+    {
+        std::cout << "4";
         return false;
+    }
 
     sender->balance -= amount;
     receiver->balance += amount;
@@ -49,7 +57,7 @@ bool transferMoney  (const std::string& fromUser,
           << "0.00,"
           << std::fixed << std::setprecision(2) << amount << ","
           << time << ","
-          <<  receiver->username << "\n";
+          << receiver->username << "\n";
 
     filed << receiver->username << ","
           << std::fixed << std::setprecision(2) << amount << ","
@@ -58,10 +66,6 @@ bool transferMoney  (const std::string& fromUser,
           << "TRANSFER_IN\n";
 
     filed.close();
-
-    std::string n1 = getNameByID(sender->username);
-    std::string n2 = getNameByID(receiver->username);
-
-    createSlip(sender->username, n1, receiver->username, n2, std::to_string(amount));
+    createSlip(sender->username, sender->name_surname, receiver->username, receiver->name_surname, std::to_string(amount));
     return true;
 }
