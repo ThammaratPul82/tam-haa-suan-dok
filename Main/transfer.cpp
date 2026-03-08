@@ -34,13 +34,11 @@ bool transferMoney(const std::string &fromUser,
 
     if (amount <= 0)
     {
-        std::cout << "3";
         return false;
     }
 
     if (amount > sender->balance)
     {
-        std::cout << "4";
         return false;
     }
 
