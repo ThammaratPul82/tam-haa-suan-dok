@@ -19,6 +19,7 @@ how to use function:
     createIMG("680610xxx", "2", "1000", "999999");
 
 #compile
-
-    g++ bank.cpp login.cpp signin.cpp user_system.cpp deposit.cpp withdraw.cpp transfer.cpp -o bank.exe -mwindows -lgdi32 -luser32 -lgdiplus
+    windres resource.rc -O coff -o resource.res
+    
+    g++ bank.cpp login.cpp signin.cpp user_system.cpp deposit.cpp withdraw.cpp transfer.cpp resource.res -o bank.exe -mwindows -lgdi32 -luser32 -lgdiplus
     
