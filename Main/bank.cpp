@@ -9,6 +9,7 @@
 #include "include/statement.h"
 #include "include/runCreate_img.h"
 
+// test
 #include <gdiplus.h>
 #pragma comment(lib, "Gdiplus.lib")
 using namespace Gdiplus;
