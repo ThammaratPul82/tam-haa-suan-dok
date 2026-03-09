@@ -18,6 +18,7 @@ vector<vector<string>> fetch_data(string id) {
     ifstream file("D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\database.csv"); 
     string line;
     vector<vector<string>> data;
+    vector<string> keep;
 
     if (!file.is_open()) return {{"-1"}};
 
@@ -54,12 +55,13 @@ vector<vector<string>> fetch_data(string id) {
                 formatted.push_back("+" + temp[1]);
             } 
             else {
-                formatted.push_back("TRANSFER " + temp[4]);
+                formatted.push_back("TRANSFER " + keep[0]);
                 formatted.push_back("-" + temp[2]);
             }
             
             data.push_back(formatted);
         }
+        keep = temp;
     }
     file.close();
     return data;

@@ -74,6 +74,8 @@ HWND btnTran_do;
 HWND btnHome, btnLogout, btnstate;
 HWND hListHistory;
 
+HWND hHeaderDate, hHeaderTime, hHeaderAction, hHeaderAmount;
+
 // HBRUSH hEditBg;
 HPEN hEditBorder;
 HPEN hEditBorderFocus;
@@ -152,10 +154,15 @@ void ShowMainMenu(HWND hwnd)
     ShowWindow(btnstate, SW_HIDE);
     ShowWindow(hListHistory, SW_HIDE);
 
+    ShowWindow(hHeaderDate, SW_HIDE);
+    ShowWindow(hHeaderTime, SW_HIDE);
+    ShowWindow(hHeaderAction, SW_HIDE);
+    ShowWindow(hHeaderAmount, SW_HIDE);
+
     InvalidateRect(hwnd, NULL, TRUE); // refresh หน้าจอ
 }
 
-void ShowLoginPage()
+void ShowLoginPage(HWND hwnd)
 {
     ShowWindow(btnLoginMenu, SW_HIDE);
     ShowWindow(btnSigninMenu, SW_HIDE);
@@ -198,9 +205,17 @@ void ShowLoginPage()
     ShowWindow(btnLogout, SW_HIDE);
     ShowWindow(btnstate, SW_HIDE);
     ShowWindow(hListHistory, SW_HIDE);
+
+    ShowWindow(hHeaderDate, SW_HIDE);
+    ShowWindow(hHeaderTime, SW_HIDE);
+    ShowWindow(hHeaderAction, SW_HIDE);
+    ShowWindow(hHeaderAmount, SW_HIDE);
+
+    InvalidateRect(hwnd, NULL, TRUE); // refresh หน้าจอ
+
 }
 
-void ShowSigninPage()
+void ShowSigninPage(HWND hwnd)
 {
     ShowWindow(btnLoginMenu, SW_HIDE);
     ShowWindow(btnSigninMenu, SW_HIDE);
@@ -243,6 +258,14 @@ void ShowSigninPage()
     ShowWindow(btnLogout, SW_HIDE);
     ShowWindow(btnstate, SW_HIDE);
     ShowWindow(hListHistory, SW_HIDE);
+
+    ShowWindow(hHeaderDate, SW_HIDE);
+    ShowWindow(hHeaderTime, SW_HIDE);
+    ShowWindow(hHeaderAction, SW_HIDE);
+    ShowWindow(hHeaderAmount, SW_HIDE);
+
+    InvalidateRect(hwnd, NULL, TRUE); // refresh หน้าจอ
+
 }
 void AccoutPage(HWND hwnd)
 {
@@ -288,9 +311,14 @@ void AccoutPage(HWND hwnd)
     ShowWindow(btnstate, SW_SHOW);
     ShowWindow(hListHistory, SW_HIDE);
 
+    ShowWindow(hHeaderDate, SW_HIDE);
+    ShowWindow(hHeaderTime, SW_HIDE);
+    ShowWindow(hHeaderAction, SW_HIDE);
+    ShowWindow(hHeaderAmount, SW_HIDE);
+
     InvalidateRect(hwnd, NULL, TRUE); // refresh หน้าจอ
 }
-void Showdeposit()
+void Showdeposit(HWND hwnd)
 {
     ShowWindow(btnLoginMenu, SW_HIDE);
     ShowWindow(btnSigninMenu, SW_HIDE);
@@ -333,9 +361,17 @@ void Showdeposit()
     ShowWindow(btnLogout, SW_HIDE);
     ShowWindow(btnstate, SW_HIDE);
     ShowWindow(hListHistory, SW_HIDE);
+
+    ShowWindow(hHeaderDate, SW_HIDE);
+    ShowWindow(hHeaderTime, SW_HIDE);
+    ShowWindow(hHeaderAction, SW_HIDE);
+    ShowWindow(hHeaderAmount, SW_HIDE);
+
+    InvalidateRect(hwnd, NULL, TRUE); // refresh หน้าจอ
+
 }
 
-void ShowWithdrawPage()
+void ShowWithdrawPage(HWND hwnd)
 {
     ShowWindow(btnLoginMenu, SW_HIDE);
     ShowWindow(btnSigninMenu, SW_HIDE);
@@ -378,9 +414,17 @@ void ShowWithdrawPage()
     ShowWindow(btnLogout, SW_HIDE);
     ShowWindow(btnstate, SW_HIDE);
     ShowWindow(hListHistory, SW_HIDE);
+
+    ShowWindow(hHeaderDate, SW_HIDE);
+    ShowWindow(hHeaderTime, SW_HIDE);
+    ShowWindow(hHeaderAction, SW_HIDE);
+    ShowWindow(hHeaderAmount, SW_HIDE);
+
+    InvalidateRect(hwnd, NULL, TRUE); // refresh หน้าจอ
+
 }
 
-void ShowTransferPage()
+void ShowTransferPage(HWND hwnd)
 {
     ShowWindow(btnLoginMenu, SW_HIDE);
     ShowWindow(btnSigninMenu, SW_HIDE);
@@ -423,9 +467,17 @@ void ShowTransferPage()
     ShowWindow(btnLogout, SW_HIDE);
     ShowWindow(btnstate, SW_HIDE);
     ShowWindow(hListHistory, SW_HIDE);
+
+    ShowWindow(hHeaderDate, SW_HIDE);
+    ShowWindow(hHeaderTime, SW_HIDE);
+    ShowWindow(hHeaderAction, SW_HIDE);
+    ShowWindow(hHeaderAmount, SW_HIDE);
+
+    InvalidateRect(hwnd, NULL, TRUE); // refresh หน้าจอ
+
 }
 
-void ShowStatementPage()
+void ShowStatementPage(HWND hwnd)
 {
     ShowWindow(btnLoginMenu, SW_HIDE);
     ShowWindow(btnSigninMenu, SW_HIDE);
@@ -468,34 +520,14 @@ void ShowStatementPage()
     ShowWindow(btnLogout, SW_SHOW);
     ShowWindow(btnstate, SW_HIDE);
     ShowWindow(hListHistory, SW_SHOW);
-}
 
-void DrawBankButton(LPDRAWITEMSTRUCT dis)
-{
-    HDC hdc = dis->hDC;
-    RECT r = dis->rcItem;
+    ShowWindow(hHeaderDate, SW_SHOW);
+    ShowWindow(hHeaderTime, SW_SHOW);
+    ShowWindow(hHeaderAction, SW_SHOW);
+    ShowWindow(hHeaderAmount, SW_SHOW);
 
-    // ลบ focus rectangle
-    if (dis->itemState & ODS_FOCUS)
-        dis->itemState &= ~ODS_FOCUS;
+    InvalidateRect(hwnd, NULL, TRUE); // refresh หน้าจอ
 
-    // สีปุ่ม
-    HBRUSH hBrush = CreateSolidBrush(RGB(0, 150, 0));
-    FillRect(hdc, &r, hBrush);
-    DeleteObject(hBrush);
-
-    // ขอบมน
-    HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 200, 0));
-    SelectObject(hdc, hPen);
-    SelectObject(hdc, GetStockObject(NULL_BRUSH));
-    RoundRect(hdc, r.left, r.top, r.right, r.bottom, 20, 20);
-    DeleteObject(hPen);
-
-    // ตัวหนังสือ
-    SetTextColor(hdc, RGB(255, 255, 255));
-    SetBkMode(hdc, TRANSPARENT);
-
-    DrawText(hdc, "LOGIN", -1, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
@@ -538,6 +570,21 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                                    hwnd, NULL, NULL, NULL);
 
         SendMessage(hTitle, WM_SETFONT, (WPARAM)hTitleFont, TRUE);
+
+        hHeaderDate = CreateWindow("Static", "Date", WS_CHILD | SS_LEFT, 
+                                   80, 175, 100, 20, hwnd, NULL, NULL, NULL);
+        hHeaderTime = CreateWindow("Static", "Time", WS_CHILD | SS_LEFT, 
+                                   192, 175, 100, 20, hwnd, NULL, NULL, NULL);
+        hHeaderAction = CreateWindow("Static", "Action", WS_CHILD | SS_LEFT, 
+                                     305, 175, 150, 20, hwnd, NULL, NULL, NULL);
+        hHeaderAmount = CreateWindow("Static", "Amount", WS_CHILD | SS_LEFT, 
+                                     550, 175, 150, 20, hwnd, NULL, NULL, NULL);
+
+        // เซ็ตฟอนต์ให้ตรงกับส่วนอื่นๆ
+        SendMessage(hHeaderDate, WM_SETFONT, (WPARAM)hFont, TRUE);
+        SendMessage(hHeaderTime, WM_SETFONT, (WPARAM)hFont, TRUE);
+        SendMessage(hHeaderAction, WM_SETFONT, (WPARAM)hFont, TRUE);
+        SendMessage(hHeaderAmount, WM_SETFONT, (WPARAM)hFont, TRUE);
 
         // ===== ปุ่มหน้าแรก =====
         // btnLoginMenu = CreateWindow("Button","LOGIN",
@@ -591,7 +638,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                                hwnd, NULL, NULL, NULL);
 
         hEditName = CreateWindow("Edit", "",
-                                 WS_CHILD | WS_BORDER,
+                                 WS_CHILD ,
                                  370, 250, 200, 25,
                                  hwnd, NULL, NULL, NULL);
 
@@ -744,12 +791,19 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         hListHistory = CreateWindow(
             "LISTBOX",
             "",
-            WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_NOTIFY,
-            50, 200, 500, 200,
+            WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_NOTIFY | WS_VSCROLL | LBS_USETABSTOPS,
+            60, 200, 680, 200, // ขยายความกว้างนิดหน่อยให้พอดีกับข้อมูล
             hwnd,
             (HMENU)ID_LIST_HISTORY,
             GetModuleHandle(NULL),
             NULL);
+
+        // ตั้งค่าระยะ Tab แต่ละคอลัมน์ (หน่วยเป็น Dialog Template Units)
+        int tabStops[] = { 65, 120, 250 }; // กะระยะให้พอดี Date -> Time -> Action -> Amount
+        SendMessage(hListHistory, LB_SETTABSTOPS, (WPARAM)3, (LPARAM)tabStops);
+
+        // บังคับให้ ListBox ใช้ฟอนต์ hFont ตัวเดียวกับปุ่มอื่นๆ
+        SendMessage(hListHistory, WM_SETFONT, (WPARAM)hFont, TRUE);
 
         SendMessage(btnLoginDo, WM_SETFONT, (WPARAM)hFont, TRUE);
         SendMessage(btnSigninDo, WM_SETFONT, (WPARAM)hFont, TRUE);
@@ -766,7 +820,42 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
     {
         if (HIWORD(wp) == EN_SETFOCUS)
         {
-            if ((HWND)lp == hEditUser || (HWND)lp == hEditPass || (HWND)lp == hEditAmount)
+            if ((HWND)lp == hEditUser)
+            {
+                focusedEdit = (HWND)lp;
+                InvalidateRect(hwnd, NULL, TRUE);
+            }
+            if ((HWND)lp == hEditPass)
+            {
+                focusedEdit = (HWND)lp;
+                InvalidateRect(hwnd, NULL, TRUE);
+            }
+            if ((HWND)lp == hEditAmount)
+            {
+                focusedEdit = (HWND)lp;
+                InvalidateRect(hwnd, NULL, TRUE);
+            }
+            if ((HWND)lp == hEditAmount_tran)
+            {
+                focusedEdit = (HWND)lp;
+                InvalidateRect(hwnd, NULL, TRUE);
+            }
+            if ((HWND)lp == hEditPass_Ac)
+            {
+                focusedEdit = (HWND)lp;
+                InvalidateRect(hwnd, NULL, TRUE);
+            }
+            if ((HWND)lp == hEditPass_tran)
+            {
+                focusedEdit = (HWND)lp;
+                InvalidateRect(hwnd, NULL, TRUE);
+            }
+            if ((HWND)lp == hEditName)
+            {
+                focusedEdit = (HWND)lp;
+                InvalidateRect(hwnd, NULL, TRUE);
+            }
+            if ((HWND)lp == hEditTo_user)
             {
                 focusedEdit = (HWND)lp;
                 InvalidateRect(hwnd, NULL, TRUE);
@@ -782,7 +871,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         switch (LOWORD(wp))
         {
         case ID_BTN_LOGIN_MENU:
-            ShowLoginPage();
+            ShowLoginPage(hwnd);
             break;
 
         case ID_BTN_BACK:
@@ -790,7 +879,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             break;
 
         case ID_BTN_SIGNIN_MENU:
-            ShowSigninPage();
+            ShowSigninPage(hwnd);
             break;
 
         case ID_BTN_LOGIN_DO:
@@ -837,7 +926,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             break;
         }
         case ID_BTN_DEPOSITE:
-            Showdeposit();
+            Showdeposit(hwnd);
             break;
 
         case ID_BTN_DEPOSITE_DO:
@@ -892,7 +981,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         }
 
         case ID_BTN_WITHDRAW:
-            ShowWithdrawPage();
+            ShowWithdrawPage(hwnd);
             break;
 
         case ID_BTN_WITHDRAW_DO:
@@ -950,7 +1039,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         break;
 
         case ID_BTN_TRANSFER:
-            ShowTransferPage();
+            ShowTransferPage(hwnd);
             break;
 
         case ID_BTN_TRANSFER_DO:
@@ -1008,6 +1097,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             SetWindowText(hEditTo_user, "");
         }
         break;
+
         case ID_BTN_HOME:
             AccoutPage(hwnd);
             SetWindowText(hEditAmount_tran, "");
@@ -1029,7 +1119,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             break;
 
         case ID_BTN_STATEMENT:
-            ShowStatementPage();
+            ShowStatementPage(hwnd);
             break;
 
         case ID_LIST_HISTORY:
@@ -1041,14 +1131,15 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             for (auto &row : data)
             {
                 char buffer[200];
-            snprintf(buffer,sizeof(buffer),"%-12s %-8s %-12s %8s",
-                    row[0].c_str(),
-                    row[1].c_str(),
-                    row[2].c_str(),
-                    row[3].c_str());
+                // เปลี่ยนจาก %-12s มาใช้ \t ขั้นระหว่างข้อมูลแทน
+                snprintf(buffer, sizeof(buffer), "%s\t%s\t%s\t%s",
+                         row[0].c_str(),
+                         row[1].c_str(),
+                         row[2].c_str(),
+                         row[3].c_str());
 
-            SendMessage(hListHistory, LB_ADDSTRING, 0, (LPARAM)buffer);
-                        }
+                SendMessage(hListHistory, LB_ADDSTRING, 0, (LPARAM)buffer);
+            }
         }
         break;
 
@@ -1085,13 +1176,6 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         LPDRAWITEMSTRUCT dis = (LPDRAWITEMSTRUCT)lp;
 
         dis->itemState &= ~ODS_FOCUS; // 🔥 ปิด focus rectangle
-
-        // ===== ปุ่ม LOGIN =====
-        // if(dis->CtlID == ID_BTN_LOGIN_MENU)
-        // {
-        //     DrawBankButton(dis);
-        //     return TRUE;
-        // }
 
         // ===== ปุ่ม DEPOSIT =====
         if (dis->CtlID == ID_BTN_LOGIN_MENU)
@@ -1334,12 +1418,62 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             RoundRect(hdc, r.left - 2, r.top - 2, r.right + 2, r.bottom + 2, 10, 10);
         }
 
+        if (IsWindowVisible(hEditName))
+        {
+            GetWindowRect(hEditPass, &r);
+            MapWindowPoints(NULL, hwnd, (LPPOINT)&r, 2);
+
+            SelectObject(hdc, focusedEdit == hEditName ? hEditBorderFocus : hEditBorder);
+            SelectObject(hdc, GetStockObject(NULL_BRUSH));
+            RoundRect(hdc, r.left - 2, r.top - 2, r.right + 2, r.bottom + 2, 10, 10);
+        }
+
         if (IsWindowVisible(hEditAmount))
         {
             GetWindowRect(hEditAmount, &r);
             MapWindowPoints(NULL, hwnd, (LPPOINT)&r, 2);
 
             SelectObject(hdc, focusedEdit == hEditAmount ? hEditBorderFocus : hEditBorder);
+            SelectObject(hdc, GetStockObject(NULL_BRUSH));
+            RoundRect(hdc, r.left - 2, r.top - 2, r.right + 2, r.bottom + 2, 10, 10);
+        }
+
+        if (IsWindowVisible(hEditAmount_tran))
+        {
+            GetWindowRect(hEditAmount_tran, &r);
+            MapWindowPoints(NULL, hwnd, (LPPOINT)&r, 2);
+
+            SelectObject(hdc, focusedEdit == hEditAmount_tran ? hEditBorderFocus : hEditBorder);
+            SelectObject(hdc, GetStockObject(NULL_BRUSH));
+            RoundRect(hdc, r.left - 2, r.top - 2, r.right + 2, r.bottom + 2, 10, 10);
+        }
+
+        if (IsWindowVisible(hEditPass_Ac))
+        {
+            GetWindowRect(hEditPass_Ac, &r);
+            MapWindowPoints(NULL, hwnd, (LPPOINT)&r, 2);
+
+            SelectObject(hdc, focusedEdit == hEditPass_Ac ? hEditBorderFocus : hEditBorder);
+            SelectObject(hdc, GetStockObject(NULL_BRUSH));
+            RoundRect(hdc, r.left - 2, r.top - 2, r.right + 2, r.bottom + 2, 10, 10);
+        }
+
+        if (IsWindowVisible(hEditPass_tran))
+        {
+            GetWindowRect(hEditPass_tran, &r);
+            MapWindowPoints(NULL, hwnd, (LPPOINT)&r, 2);
+
+            SelectObject(hdc, focusedEdit == hEditPass_tran ? hEditBorderFocus : hEditBorder);
+            SelectObject(hdc, GetStockObject(NULL_BRUSH));
+            RoundRect(hdc, r.left - 2, r.top - 2, r.right + 2, r.bottom + 2, 10, 10);
+        }
+
+        if (IsWindowVisible(hEditTo_user))
+        {
+            GetWindowRect(hEditTo_user, &r);
+            MapWindowPoints(NULL, hwnd, (LPPOINT)&r, 2);
+
+            SelectObject(hdc, focusedEdit == hEditTo_user ? hEditBorderFocus : hEditBorder);
             SelectObject(hdc, GetStockObject(NULL_BRUSH));
             RoundRect(hdc, r.left - 2, r.top - 2, r.right + 2, r.bottom + 2, 10, 10);
         }
@@ -1444,6 +1578,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int)
 {
     WNDCLASS wc = {0};
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+
+    wc.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(101));
+
     wc.hInstance = hInst;
     wc.lpszClassName = "BankClass";
     wc.lpfnWndProc = WindowProcedure;
