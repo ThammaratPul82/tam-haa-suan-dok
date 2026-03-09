@@ -9,7 +9,7 @@ std::vector<User> user_info;
 
 void loadUsers() {
 
-    user_info.clear();   // 🔥 เพิ่มบรรทัดนี้
+    user_info.clear();   
 
     std::ifstream file("users.csv");
     std::string line;
