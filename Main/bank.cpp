@@ -673,7 +673,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                                    WS_CHILD | ES_AUTOHSCROLL,
                                    370, 220, 180, 22,
                                    hwnd, NULL, NULL, NULL);
-        SendMessage(hEditAmount, EM_SETLIMITTEXT, 10, 0);
+        SendMessage(hEditAmount, EM_SETLIMITTEXT, 7, 0);
 
         oldAmountProc = (WNDPROC)SetWindowLongPtr(
             hEditAmount,
@@ -724,7 +724,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                                         WS_CHILD | ES_AUTOHSCROLL,
                                         370, 270, 180, 25,
                                         hwnd, NULL, NULL, NULL);
-        SendMessage(hEditAmount_tran, EM_SETLIMITTEXT, 8, 0);
+        SendMessage(hEditAmount_tran, EM_SETLIMITTEXT, 7, 0);
 
         SetWindowLongPtr(
             hEditAmount_tran,
@@ -766,7 +766,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
     {
         if (HIWORD(wp) == EN_SETFOCUS)
         {
-            if ((HWND)lp == hEditUser || (HWND)lp == hEditPass)
+            if ((HWND)lp == hEditUser || (HWND)lp == hEditPass || (HWND)lp == hEditAmount)
             {
                 focusedEdit = (HWND)lp;
                 InvalidateRect(hwnd, NULL, TRUE);
@@ -843,10 +843,10 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         case ID_BTN_DEPOSITE_DO:
         {
             char pass[20];
-            char amountStr[20];
+            char amountStr[200];
 
             GetWindowText(hEditPass_Ac, pass, 20);
-            GetWindowText(hEditAmount, amountStr, 20);
+            GetWindowText(hEditAmount, amountStr, 200);
 
             std::string amountText = amountStr;
 
@@ -860,8 +860,9 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             }
 
             double amount = std::stod(amountText);
+            int func = depositMoney(currentUser, pass, amount);
 
-            if (depositMoney(currentUser, pass, amount))
+            if (func == 1)
             {
                 MessageBox(hwnd, "Deposit Success", "Success", MB_OK);
 
@@ -871,10 +872,20 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                 snprintf(balText, sizeof(balText), "BALANCE : %.2f THB.", userBalance);
                 SetWindowText(hStaticBalance, balText);
             }
-            else
+            else if (func == 2)
             {
                 MessageBox(hwnd, "Wrong password", "Error", MB_OK);
             }
+
+            else if (func == 3)
+            {
+                MessageBox(hwnd, "Please Enter the amount", "Error", MB_OK);
+            }
+            else
+            {
+                MessageBox(hwnd, "Please contact the bank", "Error", MB_OK);
+            }
+
             SetWindowText(hEditAmount, "");
             SetWindowText(hEditPass_Ac, "");
             break;
@@ -887,10 +898,10 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         case ID_BTN_WITHDRAW_DO:
         {
             char pass[20];
-            char amountStr[20];
+            char amountStr[200];
 
             GetWindowText(hEditPass_Ac, pass, 20);
-            GetWindowText(hEditAmount, amountStr, 20);
+            GetWindowText(hEditAmount, amountStr, 200);
 
             std::string amountText = amountStr;
 
@@ -904,8 +915,9 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             }
 
             double amount = std::stod(amountText);
+            int func1 = withdrawMoney(currentUser, pass, amount, userBalance);
 
-            if (withdrawMoney(currentUser, pass, amount, userBalance))
+            if (func1 == 1)
             {
 
                 MessageBox(hwnd, "Withdraw Success", "Success", MB_OK);
@@ -916,9 +928,21 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                 snprintf(balText, sizeof(balText), "BALANCE : %.2f THB.", userBalance);
                 SetWindowText(hStaticBalance, balText);
             }
-            else
+            else if (func1 == 2)
             {
-                MessageBox(hwnd, "Withdraw Failed", "Error", MB_OK);
+                MessageBox(hwnd, "Wrong password", "Error", MB_OK);
+            }
+            else if (func1 == 3)
+            {
+                MessageBox(hwnd, "Your current balance is insufficient", "Error", MB_OK);
+            }
+            else if (func1 == 4)
+            {
+                MessageBox(hwnd, "Please Enter the amount", "Error", MB_OK);
+            }
+            else if (func1 == 0)
+            {
+                MessageBox(hwnd, "Please contact the bank", "Error", MB_OK);
             }
             SetWindowText(hEditAmount, "");
             SetWindowText(hEditPass_Ac, "");
@@ -933,11 +957,11 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         {
             char target[100];
             char pass[20];
-            char amountStr[20];
+            char amountStr[200];
 
             GetWindowText(hEditTo_user, target, 100);
             GetWindowText(hEditPass_tran, pass, 20);
-            GetWindowText(hEditAmount_tran, amountStr, 20);
+            GetWindowText(hEditAmount_tran, amountStr, 200);
 
             std::string amountText = amountStr;
 
@@ -951,8 +975,9 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             }
 
             double amount = std::stod(amountText);
+            int func2 = transferMoney(currentUser, target, pass, amount);
 
-            if (transferMoney(currentUser, target, pass, amount))
+            if (func2 == 1)
             {
                 userBalance = getBalance(currentUser);
 
@@ -962,9 +987,21 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                 snprintf(balText, sizeof(balText), "BALANCE : %.2f THB.", userBalance);
                 SetWindowText(hStaticBalance, balText);
             }
-            else
+            else if (func2 == 2)
             {
-                MessageBox(hwnd, "Transfer Failed", "Error", MB_OK);
+                MessageBox(hwnd, "Wrong password", "Error", MB_OK);
+            }
+            else if (func2 == 3)
+            {
+                MessageBox(hwnd, "Account not found", "Error", MB_OK);
+            }
+            else if (func2 == 4)
+            {
+                MessageBox(hwnd, "Please Enter the amount", "Error", MB_OK);
+            }
+            else if (func2 == 5)
+            {
+                MessageBox(hwnd, "Your current balance is insufficient", "Error", MB_OK);
             }
             SetWindowText(hEditAmount_tran, "");
             SetWindowText(hEditPass_tran, "");
@@ -973,10 +1010,22 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         break;
         case ID_BTN_HOME:
             AccoutPage(hwnd);
+            SetWindowText(hEditAmount_tran, "");
+            SetWindowText(hEditPass_tran, "");
+            SetWindowText(hEditTo_user, "");
+            SetWindowText(hEditPass_Ac, "");
+            SetWindowText(hEditAmount, "");
             break;
 
         case ID_BTN_LOGOUT:
             ShowMainMenu(hwnd);
+            SetWindowText(hEditAmount_tran, "");
+            SetWindowText(hEditPass_tran, "");
+            SetWindowText(hEditTo_user, "");
+            SetWindowText(hEditPass_Ac, "");
+            SetWindowText(hEditAmount, "");
+            SetWindowText(hEditUser, "");
+            SetWindowText(hEditPass, "");
             break;
 
         case ID_BTN_STATEMENT:

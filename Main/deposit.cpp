@@ -5,7 +5,7 @@
 #include "include/runCreate_img.h"
 #include <string>
 
-bool depositMoney(std::string username, std::string password, double amount)
+int depositMoney(std::string username, std::string password, double amount)
 {
     loadUsers();
 
@@ -14,7 +14,10 @@ bool depositMoney(std::string username, std::string password, double amount)
         if (u.username == username)
         {
             if (u.password != password)
-                return false;
+                return 2;
+
+            if (amount <= 0)
+                return 3;
 
             u.balance += amount;
 
@@ -33,9 +36,9 @@ bool depositMoney(std::string username, std::string password, double amount)
 
             filed.close();
             createIMG(u.username, "1", std::to_string(amount), std::to_string(u.balance));
-            return true;
+            return 1;
         }
     }
 
-    return false;
+    return 0;
 }

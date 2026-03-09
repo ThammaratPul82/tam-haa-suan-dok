@@ -3,7 +3,7 @@
 
 #include <string>
 
-bool transferMoney(const std::string& fromUser,
+int transferMoney(const std::string& fromUser,
                      const std::string& toUser,
                      std::string password,
                      double amount);

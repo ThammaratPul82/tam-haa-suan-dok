@@ -4,7 +4,7 @@
 #include <iomanip>
 #include "include/runCreate_img.h"
 
-bool transferMoney(const std::string &fromUser,
+int transferMoney(const std::string &fromUser,
                    const std::string &toUser,
                    std::string password,
                    double amount)
@@ -24,22 +24,22 @@ bool transferMoney(const std::string &fromUser,
 
     if (!sender || sender->password != password)
     {
-        return false;
+        return 2;
     }
 
     if (!receiver)
     {
-        return false;
+        return 3;
     }
 
     if (amount <= 0)
     {
-        return false;
+        return 4;
     }
 
     if (amount > sender->balance)
     {
-        return false;
+        return 5;
     }
 
     sender->balance -= amount;
@@ -65,5 +65,5 @@ bool transferMoney(const std::string &fromUser,
 
     filed.close();
     createSlip(sender->username, sender->name_surname, receiver->username, receiver->name_surname, std::to_string(amount));
-    return true;
+    return 1;
 }

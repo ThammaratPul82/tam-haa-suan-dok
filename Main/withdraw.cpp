@@ -9,7 +9,7 @@
 
 using namespace std;
 
-bool withdrawMoney(std::string username,std::string password, double amount, double &newBalance)
+int withdrawMoney(std::string username,std::string password, double amount, double &newBalance)
 {
     loadUsers();
 
@@ -18,9 +18,13 @@ bool withdrawMoney(std::string username,std::string password, double amount, dou
         if (u.username == username)
         {
             if (u.password != password)
-                return false;
+                return 2;
+
             if (amount > u.balance)
-                return false;
+                return 3;
+
+            if (amount <= 0)
+                return 4;
 
             u.balance -= amount;
 
@@ -40,11 +44,11 @@ bool withdrawMoney(std::string username,std::string password, double amount, dou
             filed.close();
 
             createIMG(u.username, "0", std::to_string(amount), std::to_string(u.balance));
-            return true;
+            return 1;
         }
     }
 
-    return false;
+    return 0;
 }
 
 
