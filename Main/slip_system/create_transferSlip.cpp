@@ -10,6 +10,13 @@ namespace fs = std::filesystem;
 using namespace cv;
 using namespace std;
 
+string encode(string id) {
+    id[8] = 'X';
+    id[7] = 'X';
+    id[6] = 'X';
+    return id;
+}
+
 bool isPathExist(std::string path) {
     if (fs::exists(path)) {
         return true;
@@ -73,10 +80,10 @@ void generateSlipTransferPNG(string bankID1, string n1, string bankID2, string n
     putText(slip, amtStr, Point((imgWidth - amtSize.width) / 2, 965), font, 2.8, green, 3, LINE_AA);
 
     putText(slip, n1, Point(516, 1262), font, 2, black, 2, LINE_AA);
-    putText(slip, bankID1, Point(513, 1370), font, 1.7, black, 2, LINE_AA);
+    putText(slip, encode(bankID1), Point(513, 1370), font, 1.7, black, 2, LINE_AA);
 
     putText(slip, n2, Point(516, 1550), font, 2, black, 2, LINE_AA);
-    putText(slip, bankID2, Point(513, 1666), font, 1.7, black, 2, LINE_AA);
+    putText(slip, encode(bankID2), Point(513, 1666), font, 1.7, black, 2, LINE_AA);
 
     string filename = "Slip_" + safeTime + ".png";
     vector<int> compression_params = {IMWRITE_PNG_COMPRESSION, 0};

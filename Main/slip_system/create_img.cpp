@@ -10,6 +10,13 @@ namespace fs = std::filesystem;
 using namespace cv;
 using namespace std;
 
+string encode(string id) {
+    id[8] = 'X';
+    id[7] = 'X';
+    id[6] = 'X';
+    return id;
+}
+
 bool isPathExist(std::string path) {
     if (fs::exists(path)) {
         return true;
@@ -56,7 +63,7 @@ void generateSlipPNG(string bankID, int type, double amount, double balance) {
     }
 
     int font = FONT_HERSHEY_DUPLEX;
-    Scalar black(40, 40, 40);
+    Scalar black(40, 40, 40); //BGR
     Scalar green(0, 150, 0);
     int imgWidth = slip.cols; 
 
@@ -66,7 +73,7 @@ void generateSlipPNG(string bankID, int type, double amount, double balance) {
     Size timeSize = getTextSize(displayTime, font, 1.2, 1, 0);
     putText(slip, displayTime, Point((imgWidth - timeSize.width) / 2, 640), font, 1.2, black, 1, LINE_AA);
 
-    putText(slip, bankID, Point(850, 785), font, 1.2, black, 2, LINE_AA);
+    putText(slip, encode(bankID), Point(850, 785), font, 1.2, black, 2, LINE_AA);
 
     string typeStr = (type == 1) ? "DEPOSIT" : "WITHDRAWAL";
     Size typeSize = getTextSize(typeStr, font, 1.2, 1, 0);
