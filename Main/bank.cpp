@@ -109,6 +109,8 @@ Image *imgStatement = nullptr;
 Image *imgLogin_do = nullptr;
 Image *imgSignin_do = nullptr;
 
+Image *imgBg = nullptr;
+
 bool loginPressed = false;
 
 void ShowMainMenu(HWND hwnd)
@@ -518,7 +520,7 @@ void ShowStatementPage(HWND hwnd)
     ShowWindow(btnTran_do, SW_HIDE);
 
     ShowWindow(btnHome, SW_SHOW);
-    ShowWindow(btnLogout, SW_SHOW);
+    ShowWindow(btnLogout, SW_HIDE);
     ShowWindow(btnstate, SW_HIDE);
     ShowWindow(hListHistory, SW_SHOW);
 
@@ -543,17 +545,17 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         hEditBorderFocus = CreatePen(PS_SOLID, 2, RGB(0, 200, 0)); // ตอน focus
 
         imgLogin = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\1.png");
-        imgSignin = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\2.png");
+        imgSignin = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\Sign_up.png");
         imgExit = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\3.png");
         imgDeposit = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\11.png");
         imgWithdraw = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\12.png");
         imgTransfer = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\13.png");
         imgHome = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\4.png");
         imgDep = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\17.png");
-        imgLogout = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\7.png");
-        imgStatement = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\16.png");
+        imgLogout = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\logout.png");
+        imgStatement = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\statement.png");
         imgLogin_do = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\18.png");
-        imgSignin_do = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\19.png");
+        imgSignin_do = new Image(L"D:\\year1\\1-2\\Compro\\project\\TAM-HAA-SUAN-DOK\\Main\\button_img\\sign-up-do.png");
 
         hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE,
                            DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
@@ -639,7 +641,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                                hwnd, NULL, NULL, NULL);
 
         hEditName = CreateWindow("Edit", "",
-                                 WS_CHILD ,
+                                 WS_CHILD | ES_AUTOHSCROLL,
                                  370, 250, 200, 25,
                                  hwnd, NULL, NULL, NULL);
 
@@ -889,9 +891,15 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             GetWindowText(hEditUser, user, 100);
             GetWindowText(hEditPass, pass, 100);
 
+            if (strlen(pass) != 8)
+            {
+                MessageBox(hwnd, "Password must be exactly 8 characters.", "Error", MB_OK | MB_ICONWARNING);
+                break;
+            }
+
             if (checkLogin(user, pass))
             {
-                currentUser = user; // 🔥 เก็บชื่อที่ login สำเร็จ
+                currentUser = user; 
                 std::string welcome = "Account ID : " + currentUser;
 
                 userBalance = getBalance(user);
@@ -914,6 +922,12 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             GetWindowText(hEditUser, user, 100);
             GetWindowText(hEditPass, pass, 100);
             GetWindowText(hEditName, name, 100); // ถ้ามีช่อง name
+
+            if (strlen(pass) != 8)
+            {
+                MessageBox(hwnd, "Password must be exactly 8 characters.", "Error", MB_OK | MB_ICONWARNING);
+                break;
+            }
 
             if (registerUser(user, pass, name))
                 MessageBox(hwnd, "Registration Success!",
@@ -938,9 +952,14 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             GetWindowText(hEditPass_Ac, pass, 20);
             GetWindowText(hEditAmount, amountStr, 200);
 
+            if (strlen(pass) != 8)
+            {
+                MessageBox(hwnd, "Password must be exactly 8 characters.", "Error", MB_OK | MB_ICONWARNING);
+                break;
+            }
+
             std::string amountText = amountStr;
 
-            // 🔴 ตรวจ format เงินก่อน
             if (!isValidAmount(amountText))
             {
                 MessageBox(hwnd,
@@ -949,7 +968,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                 return 0;
             }
 
-            double amount = std::stod(amountText);
+            long double amount = std::stod(amountText);
             int func = depositMoney(currentUser, pass, amount);
 
             if (func == 1)
@@ -993,9 +1012,14 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             GetWindowText(hEditPass_Ac, pass, 20);
             GetWindowText(hEditAmount, amountStr, 200);
 
+            if (strlen(pass) != 8)
+            {
+                MessageBox(hwnd, "Password must be exactly 8 characters.", "Error", MB_OK | MB_ICONWARNING);
+                break;
+            }
+
             std::string amountText = amountStr;
 
-            // 🔴 ตรวจ format เงินก่อน
             if (!isValidAmount(amountText))
             {
                 MessageBox(hwnd,
@@ -1004,7 +1028,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                 return 0;
             }
 
-            double amount = std::stod(amountText);
+            long double amount = std::stod(amountText);
             int func1 = withdrawMoney(currentUser, pass, amount, userBalance);
 
             if (func1 == 1)
@@ -1053,9 +1077,14 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             GetWindowText(hEditPass_tran, pass, 20);
             GetWindowText(hEditAmount_tran, amountStr, 200);
 
+            if (strlen(pass) != 8)
+            {
+                MessageBox(hwnd, "Password must be exactly 8 characters.", "Error", MB_OK | MB_ICONWARNING);
+                break;
+            }
+
             std::string amountText = amountStr;
 
-            // 🔴 ตรวจ format เงินก่อน
             if (!isValidAmount(amountText))
             {
                 MessageBox(hwnd,
@@ -1064,7 +1093,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                 return 0;
             }
 
-            double amount = std::stod(amountText);
+            long double amount = std::stod(amountText);
             int func2 = transferMoney(currentUser, target, pass, amount);
 
             if (func2 == 1)
@@ -1132,7 +1161,6 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             for (auto &row : data)
             {
                 char buffer[200];
-                // เปลี่ยนจาก %-12s มาใช้ \t ขั้นระหว่างข้อมูลแทน
                 snprintf(buffer, sizeof(buffer), "%s\t%s\t%s\t%s",
                          row[0].c_str(),
                          row[1].c_str(),
@@ -1176,7 +1204,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
     {
         LPDRAWITEMSTRUCT dis = (LPDRAWITEMSTRUCT)lp;
 
-        dis->itemState &= ~ODS_FOCUS; // 🔥 ปิด focus rectangle
+        dis->itemState &= ~ODS_FOCUS; 
 
         // ===== ปุ่ม DEPOSIT =====
         if (dis->CtlID == ID_BTN_LOGIN_MENU)
@@ -1421,7 +1449,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 
         if (IsWindowVisible(hEditName))
         {
-            GetWindowRect(hEditPass, &r);
+            GetWindowRect(hEditName, &r);
             MapWindowPoints(NULL, hwnd, (LPPOINT)&r, 2);
 
             SelectObject(hdc, focusedEdit == hEditName ? hEditBorderFocus : hEditBorder);
@@ -1565,7 +1593,6 @@ LRESULT CALLBACK AmountProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
                 SendMessage(hwnd, EM_SETSEL, 2, 2);
                 return 0;
             }
-
             return CallWindowProc(oldAmountProc, hwnd, msg, wp, lp);
         }
 

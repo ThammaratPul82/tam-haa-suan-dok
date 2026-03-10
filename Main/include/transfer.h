@@ -6,6 +6,6 @@
 int transferMoney(const std::string& fromUser,
                      const std::string& toUser,
                      std::string password,
-                     double amount);
+                     long double amount);
 
 #endif

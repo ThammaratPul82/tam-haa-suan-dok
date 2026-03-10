@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <regex>
+#include <iomanip>
 
 std::vector<User> user_info;
 
@@ -44,7 +45,7 @@ void saveToFile() {
             << u.password << ","
             << u.attempt << ","
             << u.date_time << ","
-            << u.balance << "\n";
+            << std::fixed << std::setprecision(2) << u.balance << "\n";
     }
 }
 
@@ -63,7 +64,6 @@ std::string getCurrentTime() {
     strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M:%S", ltm);
     return std::string(buffer);
 }
-
 double getBalance(const std::string& username)
 {
     for (auto &u : user_info)

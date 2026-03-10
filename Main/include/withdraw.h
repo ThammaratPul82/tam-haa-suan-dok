@@ -3,7 +3,7 @@
 
 #include <string>
 
-int withdrawMoney(std::string username,std::string password, double amount, double &newBalance);
+int withdrawMoney(std::string username,std::string password, long double amount, double &newBalance);
 
 
 #endif

@@ -3,6 +3,6 @@
 
 #include <string>
 
-int depositMoney(std::string username, std::string password, double amount);
+int depositMoney(std::string username, std::string password, long double amount);
 
 #endif

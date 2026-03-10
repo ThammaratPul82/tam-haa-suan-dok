@@ -54,7 +54,9 @@ void generateSlipPNG(string bankID, int type, double amount, double balance) {
     string savePath = "C:/Users/USER/OneDrive/Pictures/slips/";
     if (!isPathExist(savePath)) savePath = "C:/Users/Admin/Pictures/slips/";
 
-    string templatePath = "D:/year1/1-2/Compro/project/tam-haa-suan-dok/Main/slip_system/template.png";
+    string templatePath;
+    if (type == 1) templatePath = "D:/year1/1-2/Compro/project/tam-haa-suan-dok/Main/slip_system/template.png";
+    else templatePath = "D:/year1/1-2/Compro/project/tam-haa-suan-dok/Main/slip_system/template_.png";
 
     Mat slip = imread(templatePath);
     if (slip.empty()) {

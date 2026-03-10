@@ -51,11 +51,11 @@ vector<vector<string>> fetch_data(string id) {
                 }
             } 
             else if (temp[4] == "TRANSFER_IN") {
-                formatted.push_back("RECEIVE");
+                formatted.push_back("RECEIVE FROM " + keep[0]);
                 formatted.push_back("+" + temp[1]);
             } 
             else {
-                formatted.push_back("TRANSFER " + keep[0]);
+                formatted.push_back("TRANSFER TO " + temp[4]);
                 formatted.push_back("-" + temp[2]);
             }
             

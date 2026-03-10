@@ -10,7 +10,7 @@ struct User {
     std::string password;
     int attempt;
     std::string date_time;
-    double balance ;
+    long double balance ;
 };
 
 extern std::vector<User> user_info;
