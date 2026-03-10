@@ -1124,7 +1124,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             }
             else if (func2 == 6)
             {
-                MessageBox(hwnd, "Wrong account number", "Error", MB_OK);
+                MessageBox(hwnd, "The destination account cannot be the same as the source account.", "Error", MB_OK);
             }
             SetWindowText(hEditAmount_tran, "");
             SetWindowText(hEditPass_tran, "");

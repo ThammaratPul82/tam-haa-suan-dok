@@ -41,7 +41,8 @@ int transferMoney(const std::string &fromUser,
     {
         return 5;
     }
-    if (receiver == sender)
+
+    if (fromUser == toUser)
     {
         return 6;
     }
