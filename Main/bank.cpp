@@ -1122,6 +1122,10 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             {
                 MessageBox(hwnd, "Your current balance is insufficient", "Error", MB_OK);
             }
+            else if (func2 == 6)
+            {
+                MessageBox(hwnd, "Wrong account number", "Error", MB_OK);
+            }
             SetWindowText(hEditAmount_tran, "");
             SetWindowText(hEditPass_tran, "");
             SetWindowText(hEditTo_user, "");

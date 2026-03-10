@@ -41,6 +41,10 @@ int transferMoney(const std::string &fromUser,
     {
         return 5;
     }
+    if (receiver == sender)
+    {
+        return 6;
+    }
 
     sender->balance -= amount;
     receiver->balance += amount;
