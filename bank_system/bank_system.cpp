@@ -4,5 +4,6 @@
 
 
 int main(){
+    deposit_system();
     withdraw_system();
 }
